@@ -1,0 +1,62 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    font-family: Arial;
+}
+
+body {
+    background-color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-size: 7.5vmin;
+}
+
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-size), var(--cell-size));
+    grid-template-rows: repeat(var(--grid-size), var(--cell-size));
+    background-color: #000;
+    gap: var(--cell-gap);
+    border-radius: var(--cell-corner-radius);
+    padding: var(--cell-gap);
+    position: relative;
+}
+
+.cell {
+    display: flex;
+    background-color: var(--cell-background-colour);
+    border-radius: var(--cell-corner-radius);
+    font-weight: bold;
+    justify-content: center;
+    align-items: center;
+    color: #000;
+
+}
+
+/*
+.tile {
+    --text-lightness: 20%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--cell-size);
+    height: var(--cell-size);
+    border-radius: var(--cell-corner-radius);
+    top: calc(var(--y) * (var(--cell-size) + var(--cell-gap)) + var(--cell-gap));
+    left: calc(var(--x) * (var(--cell-size) + var(--cell-gap)) + var(--cell-gap));
+    font-weight: bold;
+    background-color: var(--tile-background-colour);
+    color: hsl(200, 25%, var(--text-lightness));
+    animation: show 200ms ease-in-out;
+    transition: 100ms ease-in-out;
+}
+*/
+@keyframes show {
+    0% {
+        opacity: .5;
+        transform: scale(0);
+    }
+}
