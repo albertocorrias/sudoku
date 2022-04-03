@@ -107,7 +107,7 @@ export default class Grid {
             document.getElementById(`divcell-${i}`).appendChild(cell_input)
 
             cell_input.addEventListener('keydown', (e) => {
-                console.log(e.code)
+                //console.log(e.code) //DEBUG LINE.
                 //restrict to digit only
                 if ((e.code.includes("Numpad") == true || e.code.includes("Digit") == true) == false) {
                     e.preventDefault();
