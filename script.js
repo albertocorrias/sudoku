@@ -1,7 +1,4 @@
-import Grid from "./Grid.js"
-import Cell from "./Cell.js"
+import Game from "./Game.js"
 
-const gameBoard = document.getElementById("game-board")
+const new_game = new Game();
 
-const grid = new Grid(gameBoard)
-grid.setUpEventListeners();

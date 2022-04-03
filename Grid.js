@@ -1,4 +1,3 @@
-
 import Cell from "./Cell.js"
 
 
@@ -69,7 +68,7 @@ export default class Grid {
         let all_cells = this.#cells
         for (let i = 0; i < cells_collection.length; i++) {
             //this.#cells[i].value = this.#cells[i].quadrant //Debug line -REMOVE later
-           
+            
             let on_same_row = this.getIndicesOnSameRow(i)
             let on_same_column = this.getIndicesOnSameColumn(i)
             let on_same_quadrant = this.getIndicesOnSameQuadrant(i)
@@ -85,10 +84,12 @@ export default class Grid {
                     let elem_same_col = all_cells[on_same_column[k]].cellElement
                     let elem_same_quad = all_cells[on_same_quadrant[k]].cellElement
                     
-                    elem_same_row.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_CELL_COLOR)
-                    elem_same_col.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_CELL_COLOR)
-                    elem_same_quad.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_CELL_COLOR)
+                    elem_same_row.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_RELATED_CELL_COLOR)
+                    elem_same_col.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_RELATED_CELL_COLOR)
+                    elem_same_quad.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_RELATED_CELL_COLOR)
                 }
+                let elem_clicked = all_cells[i].cellElement
+                elem_clicked.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_CELL_COLOR)
             })
 
             //For each cell, create its input field
@@ -108,7 +109,14 @@ export default class Grid {
                 }
                 var this_cell = document.getElementsByName(`${i}-inputcell`)
                 this_cell[0].value = '';//clear previous values
-                all_cells[i].value=e.key;//record new value
+                //highlight equal values elsewhere
+                for (let j = 0; j < cells_collection.length; j++) {
+                    if (all_cells[j].value==e.key) {
+                        let elem_to_highlight = all_cells[j].cellElement
+                        elem_to_highlight.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_CELL_COLOR_SAME_NUMBER)
+                    }
+                }
+                all_cells[i].value = e.key;//record new value
             });
         }
     }

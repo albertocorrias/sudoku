@@ -48,6 +48,6 @@ export default class Cell {
 
     set value(v){
         this.#value = v
-        //this.cellElement.textContent = v
+        this.cellElement.textContent = v //useful for debugging game logic
     }
 }
