@@ -1,0 +1,70 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    font-family: Arial;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+
+body {
+    background-color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-size: 7.5vmin;
+}
+
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-size), var(--cell-size));
+    grid-template-rows: repeat(var(--grid-size), var(--cell-size));
+    background-color: #333;/*Change this to something different if you want the border to be there, thickness below*/
+    padding: var(--board-border);/*The thickness of the border of the whole board*/
+    position: relative;
+}
+
+.cell {
+    display: flex;
+    background-color: var(--cell-background-colour);
+    border-bottom: var(--cell-border-bottom);
+    border-left: var(--cell-border-left);
+    border-top: var(--cell-border-top);
+    border-right: var(--cell-border-right);
+    font-weight: normal;
+    justify-content: center;
+    align-items: center;
+    color: #000;
+}
+
+.cell_inputs {
+    border: none;
+    width: 100%;
+    height: 100%;
+    background-color: var(--cell-background-colour);
+    font-weight: normal;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    caret-color: transparent;
+    cursor: default;
+    font-size: 75%;
+}
+
+@keyframes show {
+    0% {
+        opacity: .5;
+        transform: scale(0);
+    }
+}
