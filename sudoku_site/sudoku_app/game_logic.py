@@ -1,11 +1,14 @@
 import math 
 import random
+import copy
 
-board = []
-for i in range(0,9):
-    board.append([])
-    for k  in range(0,9):
-        board[i].append(0)
+def CreateEmptyBoard():
+    board = []
+    for i in range(0,9):
+        board.append([])
+        for k  in range(0,9):
+            board[i].append(0)
+    return board
 
 def isPresentInRow(num, row_num, board):
     return (num in board[row_num])
@@ -37,23 +40,64 @@ def isValidAllocation(num,row,col,board):
     else:
         return True
 
-start_arr = [1,2,3,4,5,6,7,8,9]
 
+def GetBoardWithHints(num_hints):
+    board = CreateEmptyBoard();
+    possible_hints = [1,2,3,4,5,6,7,8,9]
+    for hint in range(0,num_hints):
+        possible_row = [0,1,2,3,4,5,6,7,8]
+        possible_col = [0,1,2,3,4,5,6,7,8]
+        random.shuffle(possible_row)
+        random.shuffle(possible_col)
+        good_row = -1
+        good_col = -1
+        for row_idx in possible_row:
+            if(good_row>-1):
+                break;
+            for col_idx in possible_col:
+                if (board[row_idx][col_idx] == 0):
+                    good_row = row_idx
+                    good_col = col_idx
+                    break;
 
-number_of_hints = 25;
-for hint in range(0,number_of_hints):
-    row = random.randint(0,8)
-    col = random.randint(0,8)
-    while(board[row][col] != 0):
-        row = random.randint(0,8)
-        col = random.randint(0,8)
-    possible_hint = 0
-    while (isValidAllocation(possible_hint,row,col,board) == False):
-        possible_hint = random.randint(1,9)
-    board[row][col] = possible_hint
+        random.shuffle(possible_hints)
+        for i in range(0,len(possible_hints)):
+            if (isValidAllocation(possible_hints[i],good_row,good_col,board) == True):
+                board[good_row][good_col] = possible_hints[i]
+                break;
 
+    return board
 
-
+def checkSolution(board):
+    numbers = [1,2,3,4,5,6,7,8,9]
+    #check row
+    for row in board:
+        summation = sum(row)
+        if (summation != sum(numbers)):
+            return False
+    #check columns
+    sum_cols = 0
+    for col in range(0,9):
+        sum_cols=0
+        for row in range(0,9):
+            sum_cols = sum_cols + board[row][col]
+        if (sum_cols != sum(numbers)):
+            return False
+    #check quadrants
+    for row in range(0,9):
+        quad_y = math.floor( row / 3)
+        for col in range(0,9):
+            quad_x = math.floor( col / 3)
+            sum_quad=0
+            for row_test in range(0,9):
+                for col_test in range(0,9):
+                    quad_x_examined = math.floor( col_test / 3)
+                    quad_y_examined = math.floor( row_test / 3)
+                    if (quad_x == quad_x_examined) and (quad_y == quad_y_examined):
+                        sum_quad = sum_quad + board[row_test][col_test]
+            if (sum_quad != sum(numbers)):
+                return False
+    return True
     
 def SolveBoard(board_to_solve):
     for row in range(0,9):
@@ -66,29 +110,23 @@ def SolveBoard(board_to_solve):
                             return True
                         else:
                             board_to_solve[row][col] = 0
-                return False    
+                return False        
     return True
 
-SolveBoard(board)
+def GetOneFullPuzzle(num_hints):
+    ret = {
+            "board_with_hints" : [],
+            "solved_board" : []
+          }
+    board = GetBoardWithHints(num_hints)
+    ret["board_with_hints"] = copy.deepcopy(board)
+    SolveBoard(board)
+    ret["solved_board"] = board
+    return ret
+
+#puzzle = GetOneFullPuzzle(19)
+#print(puzzle["board_with_hints"])
+#print(puzzle["solved_board"])
+#print(checkSolution(puzzle["solved_board"]))
 
 
-
-test_board = []
-for i in range(0,9):
-    test_board.append([])
-    for k  in range(0,9):
-        test_board[i].append(0)
-test_board[0][4] = 8
-
-
-print(isPresentInRow(0, 3, test_board))
-print(isPresentInRow(1, 3, test_board))
-print(isPresentInRow(8, 0, test_board))
-print(isPresentInColumn(0, 3, test_board))
-print(isPresentInColumn(1, 3, test_board))
-print(isPresentInQuadrant(1, 3, 3, test_board))
-print(isPresentInQuadrant(8, 1, 5, test_board))
-test_board[0][0] = 1
-print(isPresentInColumn(1, 0, test_board))
-print(isPresentInRow(1, 0, test_board))
-print(isPresentInQuadrant(8, 1, 5, test_board))
