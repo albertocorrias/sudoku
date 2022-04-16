@@ -67,7 +67,7 @@ export default class Grid {
         const cells_collection = document.getElementsByClassName("cell");
         let all_cells = this.#cells
         for (let i = 0; i < cells_collection.length; i++) {
-            //this.#cells[i].value = this.#cells[i].quadrant //Debug line -REMOVE later
+            cells_collection[i].setAttribute("tabindex", 0)//critical line to allow focus and accepting key events
             
             let on_same_row = this.getIndicesOnSameRow(i)
             let on_same_column = this.getIndicesOnSameColumn(i)
@@ -88,36 +88,47 @@ export default class Grid {
                     elem_same_col.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_RELATED_CELL_COLOR)
                     elem_same_quad.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_RELATED_CELL_COLOR)
                 }
-                let elem_clicked = all_cells[i].cellElement
-                elem_clicked.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_CELL_COLOR)
-            })
-
-            //For each cell, create its input field
-            var cell_input = document.createElement("input")
-            cell_input.type = "number"
-            cell_input.name = `${i}-inputcell`
-            cell_input.classList.add("cell_inputs")
-            cells_collection[i].appendChild(cell_input)
-            document.getElementById(`divcell-${i}`).appendChild(cell_input)
-
-            cell_input.addEventListener('keydown', (e) => {
-                //console.log(e.code) //DEBUG LINE.
-                //restrict to digit only
-                if ((e.code.includes("Numpad") == true || e.code.includes("Digit") == true) == false) {
-                    e.preventDefault();
-                    return false;//do no more
-                }
-                var this_cell = document.getElementsByName(`${i}-inputcell`)
-                this_cell[0].value = '';//clear previous values
                 //highlight equal values elsewhere
                 for (let j = 0; j < cells_collection.length; j++) {
-                    if (all_cells[j].value==e.key) {
+                    if (all_cells[j].value==all_cells[i].value && typeof all_cells[j].value != 'undefined') {
                         let elem_to_highlight = all_cells[j].cellElement
                         elem_to_highlight.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_CELL_COLOR_SAME_NUMBER)
                     }
                 }
-                all_cells[i].value = e.key;//record new value
-            });
+                //highlight the clicked cell itself
+                let elem_clicked = all_cells[i].cellElement
+                elem_clicked.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_CELL_COLOR)
+            })
+
+            //accept key inputs only from non-hints cells
+            if (all_cells[i].isHint == false) {
+                cells_collection[i].addEventListener('keydown', function(e) {
+                    console.log(i) //DEBUG LINE.    
+                    //restrict to digit only
+                    if ((e.code.includes("Numpad") == true || e.code.includes("Digit") == true) == false) {
+                        e.preventDefault();
+                        return false;//do no more
+                    }
+                    for (let j = 0; j < cells_collection.length; j++) {
+                        //clear previous highlighting
+                        if (all_cells[j].cellElement.style.getPropertyValue("--cell-background-colour") == Globals.HIGHLIGHTED_CELL_COLOR_SAME_NUMBER) {
+                            //restore same-quadrant-same-row-same-column highlighting where necessary
+                            if (on_same_row.includes(j) || on_same_column.includes(j) || on_same_quadrant.includes(j)){
+                                all_cells[j].cellElement.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_RELATED_CELL_COLOR)
+                            } else {
+                                //restore normal background otherwise
+                                all_cells[j].cellElement.style.setProperty("--cell-background-colour", Globals.NORMAL_CELL_COLOR)
+                            }
+                        }
+                        //impose new hoghlighting
+                        if (all_cells[j].value==e.key && typeof all_cells[j].value != 'undefined') {
+                            let elem_to_highlight = all_cells[j].cellElement
+                            elem_to_highlight.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_CELL_COLOR_SAME_NUMBER)
+                        }
+                    }
+                    all_cells[i].value = e.key;//record new value
+                });
+            }
         }
     }
 } //end of Grid class

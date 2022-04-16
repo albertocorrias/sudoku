@@ -10,18 +10,20 @@ def CreateEmptyBoard():
             board[i].append(0)
     return board
 
-def isPresentInRow(num, row_num, board):
-    return (num in board[row_num])
+def howManyTimesInRow(num, row_num, board):
+    return (board[row_num].count(num))
 
-def isPresentInColumn(num,col_num,board):
+def howManyTimesInColumn(num,col_num,board):
+    how_many = 0
     for row in range(0,9):
         if (board[row][col_num] == num):
-            return True;
-    return False
+            how_many += 1
+    return how_many
 
-def isPresentInQuadrant(num, row_num, col_num, board):
+def howManyTimesInQuadrant(num, row_num, col_num, board):
     quad_x = math.floor( col_num / 3)
     quad_y = math.floor( row_num / 3)
+    how_many = 0
     for row in range(0,9):
         for col  in range(0,9):
             quad_x_examined = math.floor( col / 3)
@@ -29,26 +31,31 @@ def isPresentInQuadrant(num, row_num, col_num, board):
             if (quad_x_examined == quad_x) and\
                (quad_y_examined == quad_y) and\
                (board[row][col] == num):
-                   return True;
-    return False;
+                   how_many += 1
+    return how_many;
 
 def isValidAllocation(num,row,col,board):
-    if (isPresentInRow(num,row,board) or\
-        isPresentInColumn(num,col,board) or\
-        isPresentInQuadrant(num,row,col,board) or num ==0):
+    if (howManyTimesInRow(num,row,board) > 0 or\
+        howManyTimesInColumn(num,col,board) > 0 or\
+        howManyTimesInQuadrant(num,row,col,board) > 0 or num ==0):
         return False
     else:
         return True
 
 
-def GetBoardWithHints(num_hints):
+def GetBoardWithHints(num_hints,deterministic_seed=0):
     board = CreateEmptyBoard();
     possible_hints = [1,2,3,4,5,6,7,8,9]
     for hint in range(0,num_hints):
         possible_row = [0,1,2,3,4,5,6,7,8]
         possible_col = [0,1,2,3,4,5,6,7,8]
-        random.shuffle(possible_row)
-        random.shuffle(possible_col)
+        if (deterministic_seed == 0):
+            random.shuffle(possible_row)
+            random.shuffle(possible_col)
+        else:
+            random.Random(deterministic_seed).shuffle(possible_row)
+            random.Random(deterministic_seed).shuffle(possible_col)
+            
         good_row = -1
         good_col = -1
         for row_idx in possible_row:
@@ -59,8 +66,13 @@ def GetBoardWithHints(num_hints):
                     good_row = row_idx
                     good_col = col_idx
                     break;
-
-        random.shuffle(possible_hints)
+        
+        if (deterministic_seed == 0):
+            random.shuffle(possible_hints)
+        else:
+            random.Random(deterministic_seed).shuffle(possible_hints)
+            
+            
         for i in range(0,len(possible_hints)):
             if (isValidAllocation(possible_hints[i],good_row,good_col,board) == True):
                 board[good_row][good_col] = possible_hints[i]
@@ -68,35 +80,39 @@ def GetBoardWithHints(num_hints):
 
     return board
 
+def checkHintBoard(board,expected_hints):
+    
+    generated_hints = 0 #counter
+    for row in range (0,len(board)):
+        for col in range(0,len(board[row])):
+            hint = board[row][col]
+            if  hint != 0:
+                generated_hints = generated_hints +1 #count them  
+                #check row
+                if (howManyTimesInRow(hint,row,board) > 1): return False
+                #check column
+                if (howManyTimesInColumn(hint,col,board) > 1): return False
+                #check quadrants
+                if (howManyTimesInQuadrant(hint,row,col,board) > 1): return False
+                
+    if (generated_hints != expected_hints): return False
+    
+    return True
+    
+    
+    
 def checkSolution(board):
-    numbers = [1,2,3,4,5,6,7,8,9]
-    #check row
-    for row in board:
-        summation = sum(row)
-        if (summation != sum(numbers)):
-            return False
-    #check columns
-    sum_cols = 0
-    for col in range(0,9):
-        sum_cols=0
-        for row in range(0,9):
-            sum_cols = sum_cols + board[row][col]
-        if (sum_cols != sum(numbers)):
-            return False
-    #check quadrants
-    for row in range(0,9):
-        quad_y = math.floor( row / 3)
-        for col in range(0,9):
-            quad_x = math.floor( col / 3)
-            sum_quad=0
-            for row_test in range(0,9):
-                for col_test in range(0,9):
-                    quad_x_examined = math.floor( col_test / 3)
-                    quad_y_examined = math.floor( row_test / 3)
-                    if (quad_x == quad_x_examined) and (quad_y == quad_y_examined):
-                        sum_quad = sum_quad + board[row_test][col_test]
-            if (sum_quad != sum(numbers)):
-                return False
+    
+    for row in range (0,len(board)):
+        for col in range(0,len(board[row])):
+            to_check = board[row][col]
+            if (to_check < 1): return False
+            if (to_check > 9): return False
+            
+            if (howManyTimesInRow(to_check,row,board) != 1): return False            
+            if (howManyTimesInColumn(to_check,col,board) != 1): return False
+            if (howManyTimesInQuadrant(to_check,row,col,board) != 1): return False
+            
     return True
     
 def SolveBoard(board_to_solve):
@@ -113,14 +129,23 @@ def SolveBoard(board_to_solve):
                 return False        
     return True
 
-def GetOneFullPuzzle(num_hints):
+def GetOneFullPuzzle(num_hints, deterministic_seed=0):
     ret = {
             "board_with_hints" : [],
             "solved_board" : []
           }
-    board = GetBoardWithHints(num_hints)
+    board = GetBoardWithHints(num_hints, deterministic_seed)
+    good_hb = checkHintBoard(board,num_hints)
+    while(good_hb == False):
+        board = GetBoardWithHints(num_hints)
+        good_hb = checkHintBoard(board,num_hints)
+        
     ret["board_with_hints"] = copy.deepcopy(board)
-    SolveBoard(board)
+    sol = SolveBoard(board)
+    while(sol==False):
+        board = GetBoardWithHints(num_hints)
+        ret["board_with_hints"] = copy.deepcopy(board)        
+        sol = SolveBoard(board)
     ret["solved_board"] = board
     return ret
 

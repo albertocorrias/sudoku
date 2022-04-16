@@ -7,14 +7,16 @@ export default class Cell {
 
     #quadrant /*The sudoku quadrant this cell is in*/
     #value /*The value of this cell*/
-
+    #isHint/*Whether or not this cell is a hint*/
     constructor(cellElement, x, y){
         this.cellElement = cellElement
         this.#x = x
         this.#y = y
+        this.#isHint = false
         let quad_x = Math.floor(this.#y / (Globals.GRID_SIZE/3))
         let quad_y = Math.floor(this.#x / (Globals.GRID_SIZE/3))
         this.#quadrant =  quad_y + (Globals.GRID_SIZE/3)*quad_x
+        
         cellElement.style.setProperty("--cell-background-colour",Globals.NORMAL_CELL_COLOR)
         cellElement.style.setProperty("--cell-border-bottom",Globals.NORMAL_CELL_BORDER)
         cellElement.style.setProperty("--cell-border-top",Globals.NORMAL_CELL_BORDER)
@@ -42,7 +44,9 @@ export default class Cell {
     get quadrant() {
         return this.#quadrant
     }
-
+    get isHint() {
+        return this.#isHint;
+    }
     get value() {
         return this.#value
     }
@@ -50,5 +54,9 @@ export default class Cell {
     set value(v){
         this.#value = v
         this.cellElement.textContent = v //useful for debugging game logic
+    }
+
+    set isHint(flag) {
+        this.#isHint = flag
     }
 }

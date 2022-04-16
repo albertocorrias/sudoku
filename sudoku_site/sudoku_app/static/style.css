@@ -48,20 +48,6 @@ body {
     color: #000;
 }
 
-.cell_inputs {
-    border: none;
-    width: 100%;
-    height: 100%;
-    background-color: var(--cell-background-colour);
-    font-weight: normal;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    caret-color: transparent;
-    cursor: default;
-    font-size: 75%;
-}
-
 @keyframes show {
     0% {
         opacity: .5;
