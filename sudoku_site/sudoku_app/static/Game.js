@@ -52,10 +52,10 @@ export default class Game {
                 }
                 //handle arrow keys
                 var new_index = -1;
-                if (evt.key == "ArrowUp"){ new_index = grid.getIndexOfCellAbove(i)}
-                if (evt.key == "ArrowRight"){ new_index = grid.getIndexOfCellAtRight(i)}
-                if (evt.key == "ArrowLeft"){ new_index = grid.getIndexOfCellAtLeft(i)}
-                if (evt.key == "ArrowDown"){ new_index = grid.getIndexOfCellBelow(i)}
+                if (evt.key === "ArrowUp"){ new_index = grid.getIndexOfCellAbove(i)}
+                if (evt.key === "ArrowRight"){ new_index = grid.getIndexOfCellAtRight(i)}
+                if (evt.key === "ArrowLeft"){ new_index = grid.getIndexOfCellAtLeft(i)}
+                if (evt.key === "ArrowDown"){ new_index = grid.getIndexOfCellBelow(i)}
                 if (new_index > -1) {
                     grid.clearAllHighlighting()
                     grid.highlightRelatedCells(new_index)
@@ -66,7 +66,5 @@ export default class Game {
                 }         
             }) 
         }        
-    }
-
-
-}
+    }//constructor
+}//Game class
