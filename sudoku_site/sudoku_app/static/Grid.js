@@ -3,9 +3,6 @@ import Cell from "./Cell.js"
 
 export default class Grid {
     #cells
-    #onerow
-    #onecolumn
-    #onequadrant
 
     constructor(gridElement) {
         gridElement.style.setProperty("--grid-size", Globals.GRID_SIZE)
@@ -18,6 +15,7 @@ export default class Grid {
                 index % Globals.GRID_SIZE, 
                 Math.floor(index / Globals.GRID_SIZE))
         })
+        
     }
 
     get cells() {
@@ -63,71 +61,90 @@ export default class Grid {
         return ret;
     }
 
-    setUpEventListeners() {
-        const cells_collection = document.getElementsByClassName("cell");
+    getIndexOfCellAbove(cell_index) {
+        var cell_above = -1
         let all_cells = this.#cells
-        for (let i = 0; i < cells_collection.length; i++) {
-            cells_collection[i].setAttribute("tabindex", 0)//critical line to allow focus and accepting key events
-            
-            let on_same_row = this.getIndicesOnSameRow(i)
-            let on_same_column = this.getIndicesOnSameColumn(i)
-            let on_same_quadrant = this.getIndicesOnSameQuadrant(i)
-            cells_collection[i].addEventListener("click", function() {
-                //clear any previous highlighting
-                for (let j = 0; j < cells_collection.length; j++) {
-                    let elem_to_clear = all_cells[j].cellElement
-                    elem_to_clear.style.setProperty("--cell-background-colour", Globals.NORMAL_CELL_COLOR)
-                }
-                //highlight same row, same column and same quadrant
-                for (let k = 0; k < on_same_row.length; k++){
-                    let elem_same_row = all_cells[on_same_row[k]].cellElement
-                    let elem_same_col = all_cells[on_same_column[k]].cellElement
-                    let elem_same_quad = all_cells[on_same_quadrant[k]].cellElement
-                    
-                    elem_same_row.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_RELATED_CELL_COLOR)
-                    elem_same_col.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_RELATED_CELL_COLOR)
-                    elem_same_quad.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_RELATED_CELL_COLOR)
-                }
-                //highlight equal values elsewhere
-                for (let j = 0; j < cells_collection.length; j++) {
-                    if (all_cells[j].value==all_cells[i].value && typeof all_cells[j].value != 'undefined') {
-                        let elem_to_highlight = all_cells[j].cellElement
-                        elem_to_highlight.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_CELL_COLOR_SAME_NUMBER)
-                    }
-                }
-                //highlight the clicked cell itself
-                let elem_clicked = all_cells[i].cellElement
-                elem_clicked.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_CELL_COLOR)
-            })
+        const target_x = all_cells[cell_index].x
+        const target_y = all_cells[cell_index].y - 1
+        if(target_y > -1){
+            cell_above = target_x+(target_y)*Globals.GRID_SIZE
+        }
+        return cell_above
+    }
 
-            //accept key inputs only from non-hints cells
-            if (all_cells[i].isHint == false) {
-                cells_collection[i].addEventListener('keydown', function(e) {
-                    console.log(i) //DEBUG LINE.    
-                    //restrict to digit only
-                    if ((e.code.includes("Numpad") == true || e.code.includes("Digit") == true) == false) {
-                        e.preventDefault();
-                        return false;//do no more
-                    }
-                    for (let j = 0; j < cells_collection.length; j++) {
-                        //clear previous highlighting
-                        if (all_cells[j].cellElement.style.getPropertyValue("--cell-background-colour") == Globals.HIGHLIGHTED_CELL_COLOR_SAME_NUMBER) {
-                            //restore same-quadrant-same-row-same-column highlighting where necessary
-                            if (on_same_row.includes(j) || on_same_column.includes(j) || on_same_quadrant.includes(j)){
-                                all_cells[j].cellElement.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_RELATED_CELL_COLOR)
-                            } else {
-                                //restore normal background otherwise
-                                all_cells[j].cellElement.style.setProperty("--cell-background-colour", Globals.NORMAL_CELL_COLOR)
-                            }
-                        }
-                        //impose new hoghlighting
-                        if (all_cells[j].value==e.key && typeof all_cells[j].value != 'undefined') {
-                            let elem_to_highlight = all_cells[j].cellElement
-                            elem_to_highlight.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_CELL_COLOR_SAME_NUMBER)
-                        }
-                    }
-                    all_cells[i].value = e.key;//record new value
-                });
+    getIndexOfCellAtRight(cell_index) {
+        var cell_right = -1
+        let all_cells = this.#cells
+        const target_x = all_cells[cell_index].x + 1
+        const target_y = all_cells[cell_index].y 
+        if(target_x < 9){
+            cell_right = target_x+(target_y)*Globals.GRID_SIZE
+        }
+        return cell_right
+    }
+
+    getIndexOfCellAtLeft(cell_index) {
+        var cell_left = -1
+        let all_cells = this.#cells
+        const target_x = all_cells[cell_index].x - 1
+        const target_y = all_cells[cell_index].y 
+        if(target_x > -1){
+            cell_left = target_x+(target_y)*Globals.GRID_SIZE
+        }
+        return cell_left
+    }
+
+    getIndexOfCellBelow(cell_index) {
+        var cell_below = -1
+        let all_cells = this.#cells
+        const target_x = all_cells[cell_index].x 
+        const target_y = all_cells[cell_index].y + 1 
+        if(target_y < 9){
+            cell_below = target_x+(target_y)*Globals.GRID_SIZE
+        }
+        return cell_below
+    }
+
+    clearAllHighlighting() {
+        let all_cells = this.#cells
+        const cells_collection = document.getElementsByClassName("cell");
+        //clear any previous highlighting
+        for (let j = 0; j < all_cells.length; j++) {
+            let elem_to_clear = all_cells[j].cellElement
+            elem_to_clear.style.setProperty("--cell-background-colour", Globals.NORMAL_CELL_COLOR)
+        }
+    }
+
+
+    highlightCell(cell_index){
+        let all_cells = this.#cells
+        let elem_clicked = all_cells[cell_index].cellElement
+        elem_clicked.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_CELL_COLOR)
+    }
+
+    highlightRelatedCells(cell_index){
+        let all_cells = this.#cells
+        let on_same_row = this.getIndicesOnSameRow(cell_index)
+        let on_same_column = this.getIndicesOnSameColumn(cell_index)
+        let on_same_quadrant = this.getIndicesOnSameQuadrant(cell_index)
+        for (let k = 0; k < on_same_row.length; k++){
+            let elem_same_row = all_cells[on_same_row[k]].cellElement
+            let elem_same_col = all_cells[on_same_column[k]].cellElement
+            let elem_same_quad = all_cells[on_same_quadrant[k]].cellElement
+                        
+            elem_same_row.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_RELATED_CELL_COLOR)
+            elem_same_col.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_RELATED_CELL_COLOR)
+            elem_same_quad.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_RELATED_CELL_COLOR)
+        }
+    }
+
+    highlightEqualValues(cell_index){
+        let all_cells = this.#cells
+        //highlight equal values elsewhere
+        for (let j = 0; j < all_cells.length; j++) {
+            if (all_cells[j].value==all_cells[cell_index].value && typeof all_cells[j].value != 'undefined') {
+                let elem_to_highlight = all_cells[j].cellElement
+                elem_to_highlight.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_CELL_COLOR_SAME_NUMBER)
             }
         }
     }

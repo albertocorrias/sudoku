@@ -22,6 +22,7 @@ export default class Cell {
         cellElement.style.setProperty("--cell-border-top",Globals.NORMAL_CELL_BORDER)
         cellElement.style.setProperty("--cell-border-left",Globals.NORMAL_CELL_BORDER)
         cellElement.style.setProperty("--cell-border-right",Globals.NORMAL_CELL_BORDER)
+
         if (this.#y == 2 || this.#y == 5){
             cellElement.style.setProperty("--cell-border-bottom",Globals.QUADRANT_CELL_BORDER)
         }
@@ -34,6 +35,9 @@ export default class Cell {
         if (this.#x == 3 || this.#x == 6){
             cellElement.style.setProperty("--cell-border-left",Globals.QUADRANT_CELL_BORDER)
         }  
+
+        //set default text color as the color user input. The grid will override for the hints
+        cellElement.style.setProperty("--number-color",Globals.NUMBER_COLOR_OF_USER_NUMBERS)
     }
     get x(){
         return this.#x;
