@@ -43,41 +43,27 @@ def isValidAllocation(num,row,col,board):
         return True
 
 
-def GetBoardWithHints(num_hints,deterministic_seed=0):
+def GetBoardWithHints(num_hints,deterministic_seed=None):
     board = CreateEmptyBoard();
     possible_hints = [1,2,3,4,5,6,7,8,9]
-    for hint in range(0,num_hints):
-        possible_row = [0,1,2,3,4,5,6,7,8]
-        possible_col = [0,1,2,3,4,5,6,7,8]
-        if (deterministic_seed == 0):
-            random.shuffle(possible_row)
-            random.shuffle(possible_col)
-        else:
-            random.Random(deterministic_seed).shuffle(possible_row)
-            random.Random(deterministic_seed).shuffle(possible_col)
-            
-        good_row = -1
-        good_col = -1
-        for row_idx in possible_row:
-            if(good_row>-1):
-                break;
-            for col_idx in possible_col:
-                if (board[row_idx][col_idx] == 0):
-                    good_row = row_idx
-                    good_col = col_idx
-                    break;
-        
-        if (deterministic_seed == 0):
-            random.shuffle(possible_hints)
-        else:
-            random.Random(deterministic_seed).shuffle(possible_hints)
-            
-            
-        for i in range(0,len(possible_hints)):
-            if (isValidAllocation(possible_hints[i],good_row,good_col,board) == True):
-                board[good_row][good_col] = possible_hints[i]
-                break;
+    hints_successfully_placed  = 0
+    while(hints_successfully_placed  < num_hints):
+        possible_position = random.Random(deterministic_seed).randint(0,80)
+        possible_row_idx = int(math.floor(possible_position/9))
+        possible_col_idx = int(math.floor(possible_position%9))
+        while (board[possible_row_idx][possible_col_idx] != 0):
+            possible_position = random.randint(0,80)
+            possible_row_idx = int(math.floor(possible_position/9))
+            possible_col_idx = int(math.floor(possible_position%9))
 
+        random.Random(deterministic_seed).shuffle(possible_hints)
+        
+        for i in range(0,len(possible_hints)):
+            if (isValidAllocation(possible_hints[i],possible_row_idx,possible_col_idx,board) == True):
+                board[possible_row_idx][possible_col_idx] = possible_hints[i]
+                hints_successfully_placed  = hints_successfully_placed + 1
+                break;
+        
     return board
 
 def checkHintBoard(board,expected_hints):
@@ -132,26 +118,26 @@ def SolveBoard(board_to_solve):
 def GetOneFullPuzzle(num_hints, deterministic_seed=0):
     ret = {
             "board_with_hints" : [],
-            "solved_board" : []
+            "solved_board" : [],
+            "seed_at_end" : 0
           }
     board = GetBoardWithHints(num_hints, deterministic_seed)
     good_hb = checkHintBoard(board,num_hints)
     while(good_hb == False):
-        board = GetBoardWithHints(num_hints)
+        deterministic_seed += 1 
+        board = GetBoardWithHints(num_hints, deterministic_seed)
         good_hb = checkHintBoard(board,num_hints)
-        
+
     ret["board_with_hints"] = copy.deepcopy(board)
     sol = SolveBoard(board)
     while(sol==False):
-        board = GetBoardWithHints(num_hints)
+        deterministic_seed += 1
+        board = GetBoardWithHints(num_hints, deterministic_seed)
         ret["board_with_hints"] = copy.deepcopy(board)        
         sol = SolveBoard(board)
     ret["solved_board"] = board
+    ret["seed_at_end"] = deterministic_seed
     return ret
 
-#puzzle = GetOneFullPuzzle(19)
-#print(puzzle["board_with_hints"])
-#print(puzzle["solved_board"])
-#print(checkSolution(puzzle["solved_board"]))
 
 

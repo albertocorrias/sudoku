@@ -17,7 +17,7 @@ input[type=number] {
 
 
 body {
-    background-color: #333;
+    background-color: blue;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -26,6 +26,16 @@ body {
     font-size: 7.5vmin;
 }
 
+#game-wrapper {
+    display: grid;
+    grid-template-columns: 1 auto auto auto;
+    background-color: DodgerBlue;
+ }
+
+#game-headers {
+    height: 3vmin;
+    background-color: red;
+}
 #game-board {
     display: grid;
     grid-template-columns: repeat(var(--grid-size), var(--cell-size));
