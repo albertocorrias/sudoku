@@ -33,9 +33,10 @@ body {
  }
 
 #game-headers {
-    height: 3vmin;
+    height: 7vmin;
     background-color: red;
 }
+
 #game-board {
     display: grid;
     grid-template-columns: repeat(var(--grid-size), var(--cell-size));

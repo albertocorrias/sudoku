@@ -3,8 +3,48 @@ from django.urls import reverse
 from decimal import *
 from sudoku_app.game_logic import GetOneFullPuzzle,GetBoardWithHints,\
 isValidAllocation,howManyTimesInQuadrant,howManyTimesInRow,howManyTimesInColumn,\
-CreateEmptyBoard, SolveBoard,checkSolution, checkHintBoard
+CreateEmptyBoard, SolveBoard,checkSolution, checkHintBoard, countEmptyRows, \
+countEmptyColumns,countEmptyQuadrants,AreHintsOnlyInRestrictedArea
 
+def CreateExampleTestBoard():
+    tb = CreateEmptyBoard();
+    #set it up like in the solver's video
+    # 7 0 2 | 0 5 0 | 6 0 0
+    # 0 0 0 | 0 0 3 | 0 0 0
+    # 1 0 0 | 0 0 9 | 5 0 0
+    # ---------------------
+    # 8 0 0 | 0 0 0 | 0 9 0
+    # 0 4 3 | 0 0 0 | 7 5 0
+    # 0 9 0 | 0 0 0 | 0 0 8
+    # ---------------------
+    # 0 0 9 | 7 0 0 | 0 0 5
+    # 0 0 0 | 2 0 0 | 0 0 0
+    # 0 0 7 | 0 4 0 | 2 0 3 
+    tb[0][0] = 7
+    tb[0][2] = 2
+    tb[0][4] = 5
+    tb[0][6] = 6
+    tb[1][5] = 3
+    tb[2][0] = 1
+    tb[2][5] = 9
+    tb[2][6] = 5
+    tb[3][0] = 8
+    tb[3][7] = 9
+    tb[4][1] = 4
+    tb[4][2] = 3
+    tb[4][6] = 7
+    tb[4][7] = 5
+    tb[5][1] = 9
+    tb[5][8] = 8
+    tb[6][2] = 9
+    tb[6][3] = 7
+    tb[6][8] = 5
+    tb[7][3] = 2
+    tb[8][2] = 7
+    tb[8][4] = 4
+    tb[8][6] = 2
+    tb[8][8] = 3
+    return tb
 
 class TestGameLogic(TestCase):
     
@@ -109,86 +149,185 @@ class TestGameLogic(TestCase):
                             self.assertEqual(isValidAllocation(num_to_try,row,col,tb),True)
                     else:
                         self.assertEqual(isValidAllocation(num_to_try,row,col,tb),True)  
-    
-    def test_hint_board_checker(self):
+
+    def test_empty_counters(self):
         tb = CreateEmptyBoard();
+        self.assertEqual(countEmptyRows(tb),9)
+        self.assertEqual(countEmptyColumns(tb),9)
+        self.assertEqual(countEmptyQuadrants(tb),9)
+
+        tb[0][0] = 3
+        self.assertEqual(countEmptyRows(tb),8)
+        self.assertEqual(countEmptyColumns(tb),8)
+        self.assertEqual(countEmptyQuadrants(tb),8)
+
+        tb[8][8] = 5
+        self.assertEqual(countEmptyRows(tb),7)
+        self.assertEqual(countEmptyColumns(tb),7)
+        self.assertEqual(countEmptyQuadrants(tb),7)
+
+        tb[0][1] = 6
+        self.assertEqual(countEmptyRows(tb),7)
+        self.assertEqual(countEmptyColumns(tb),6)
+        self.assertEqual(countEmptyQuadrants(tb),7)
+
+        tb[4][0] = 9
+        self.assertEqual(countEmptyRows(tb),6)
+        self.assertEqual(countEmptyColumns(tb),6)
+        self.assertEqual(countEmptyQuadrants(tb),6)
+
+        tb[8][0] = 1
+        self.assertEqual(countEmptyRows(tb),6)
+        self.assertEqual(countEmptyColumns(tb),6)
+        self.assertEqual(countEmptyQuadrants(tb),5)
+
+        tb[1][1] = 4
+        self.assertEqual(countEmptyRows(tb),5)
+        self.assertEqual(countEmptyColumns(tb),6)
+        self.assertEqual(countEmptyQuadrants(tb),5)
+
+        new_tb = CreateExampleTestBoard()
+        self.assertEqual(countEmptyRows(new_tb),0)
+        self.assertEqual(countEmptyColumns(new_tb),0)
+        self.assertEqual(countEmptyQuadrants(new_tb),1)
+
+    def test_hints_in_restriced_area_only(self):
+        tb = CreateEmptyBoard();
+        self.assertEqual(AreHintsOnlyInRestrictedArea(tb),True)
+        tb[4][1] = 8 
+        self.assertEqual(AreHintsOnlyInRestrictedArea(tb),True)
+        tb[7][4] = 8 
+        self.assertEqual(AreHintsOnlyInRestrictedArea(tb),True)
+
+        #Place one in first row
+        tb[0][4] = 8 
+        self.assertEqual(AreHintsOnlyInRestrictedArea(tb),False)
+        #put it back
+        tb[0][4] = 0
+        self.assertEqual(AreHintsOnlyInRestrictedArea(tb),True)
+
+        #Place one in last row
+        tb[8][4] = 8 
+        self.assertEqual(AreHintsOnlyInRestrictedArea(tb),False)
+        #put it back
+        tb[8][4] = 0
+        self.assertEqual(AreHintsOnlyInRestrictedArea(tb),True)
         
-        self.assertEqual(checkHintBoard(tb,1),False)#Expect one hint, none there
-        tb[0][0] = 9
-        self.assertEqual(checkHintBoard(tb,1),True)#Expect one hint, one there
-        #Insert 9 on same row
-        tb[0][8] = 9
-        self.assertEqual(checkHintBoard(tb,2),False)#Expect two, find two but invalid
+        #Place one in first column
+        tb[4][0] = 8 
+        self.assertEqual(AreHintsOnlyInRestrictedArea(tb),False)
+        #put it back
+        tb[4][0] = 0
+        self.assertEqual(AreHintsOnlyInRestrictedArea(tb),True)
+
+        #Place one in last column
+        tb[4][8] = 8 
+        self.assertEqual(AreHintsOnlyInRestrictedArea(tb),False)
+        #put it back
+        tb[4][8] = 0
+        self.assertEqual(AreHintsOnlyInRestrictedArea(tb),True)
+        
+        #Place one in the middle
+        tb[4][4] = 8 
+        self.assertEqual(AreHintsOnlyInRestrictedArea(tb),False)
+        #put it back
+        tb[4][4] = 0
+        self.assertEqual(AreHintsOnlyInRestrictedArea(tb),True)
+
+        #Place one in first quadrant
+        tb[1][1] = 8 
+        self.assertEqual(AreHintsOnlyInRestrictedArea(tb),False)
+        #put it back
+        tb[1][1] = 0
+        self.assertEqual(AreHintsOnlyInRestrictedArea(tb),True)
+
+        #Place one in top right quadrant
+        tb[1][7] = 8 
+        self.assertEqual(AreHintsOnlyInRestrictedArea(tb),False)
+        #put it back
+        tb[1][7] = 0
+        self.assertEqual(AreHintsOnlyInRestrictedArea(tb),True)
+
+        #Place one in bottom left quadrant
+        tb[7][1] = 8 
+        self.assertEqual(AreHintsOnlyInRestrictedArea(tb),False)
+        #put it back
+        tb[7][1] = 0
+        self.assertEqual(AreHintsOnlyInRestrictedArea(tb),True)
+        
+        #Place one in bottom right quadrant
+        tb[7][7] = 8 
+        self.assertEqual(AreHintsOnlyInRestrictedArea(tb),False)
+        #put it back
+        tb[7][7] = 0
+        self.assertEqual(AreHintsOnlyInRestrictedArea(tb),True)
+
+    def test_hint_board_checker(self):
+        tb = CreateExampleTestBoard();
+        # 7 0 2 | 0 5 0 | 6 0 0
+        # 0 0 0 | 0 0 3 | 0 0 0
+        # 1 0 0 | 0 0 9 | 5 0 0
+        # ---------------------
+        # 8 0 0 | 0 0 0 | 0 9 0
+        # 0 4 3 | 0 0 0 | 7 5 0
+        # 0 9 0 | 0 0 0 | 0 0 8
+        # ---------------------
+        # 0 0 9 | 7 0 0 | 0 0 5
+        # 0 0 0 | 2 0 0 | 0 0 0
+        # 0 0 7 | 0 4 0 | 2 0 3 
+
+        self.assertEqual(checkHintBoard(tb,1),False)#Expect one hint, 24 there
+        self.assertEqual(checkHintBoard(tb,24),True)#Expect 24 hints, 24 there
+
+        #Insert 7 on same row
+        tb[0][8] = 7
+        self.assertEqual(checkHintBoard(tb,25),False)#Expect 25, find 25 but invalid
         #put it back to 0
         tb[0][8] = 0
-        self.assertEqual(checkHintBoard(tb,1),True)
+        self.assertEqual(checkHintBoard(tb,24),True)
         
         #Insert 9 on same column
-        tb[8][0] = 9
-        self.assertEqual(checkHintBoard(tb,2),False)#Expect two, find two but invalid
+        tb[8][0] = 1
+        self.assertEqual(checkHintBoard(tb,25),False)#Expect 25, find 25 but invalid
         
         #put it back to 0
         tb[8][0] = 0
-        self.assertEqual(checkHintBoard(tb,1),True)
+        self.assertEqual(checkHintBoard(tb,24),True)
         
-        #insert 9 on same quadrant
-        tb[1][1] = 9
-        self.assertEqual(checkHintBoard(tb,2),False)#Expect two, find two but invalid
+        #insert 1 on same quadrant (not same row, not same column)
+        tb[1][1] = 1
+        self.assertEqual(checkHintBoard(tb,25),False)#Expect 25, find 25 but invalid
         
         #put it back to 0
         tb[1][1] = 0
-        self.assertEqual(checkHintBoard(tb,1),True)
+        self.assertEqual(checkHintBoard(tb,24),True)
         
-        #Valid 9 insertion
+        #Valid insertion
         tb[1][8] = 9
-        self.assertEqual(checkHintBoard(tb,2),True)#Expect two, find two
+        self.assertEqual(checkHintBoard(tb,25),True)#Expect 25, find 25, all good
         
-        #Valid non-9 insertion in same quadrant
-        tb[1][1] = 4
-        self.assertEqual(checkHintBoard(tb,3),True)#Expect three, find three
+
+    def test_hint_board_checker_2(self):
+        tb = CreateEmptyBoard();
         
-        #Valid non-9 insertion in same row
-        tb[0][8] = 1
-        self.assertEqual(checkHintBoard(tb,4),True)#Expect 4, find 4
+        self.assertEqual(checkHintBoard(tb,0),False)#Expect zero hints, but too many empty groups
+
+        for i in range(0,9):
+            tb[0][i] = i + 1
         
-        #Valid non-9 insertion in same column
-        tb[8][0] = 2
-        self.assertEqual(checkHintBoard(tb,5),True)#Expect 5, find 5
-        
+        self.assertEqual(checkHintBoard(tb,9),False)#Expect 9 hints, but too many empty groups
+
+
     def test_generate_hints(self):
         #Genearte many hint boards with different hints and check
         #40 is number used for easiest sudokus - we go all the way to 45 to be sure
-        for num_hints in range(1,45):
+        #Less than 20 may generate invalid boards
+        for num_hints in range(20,45):
             board = GetBoardWithHints(num_hints,45);#45 seed works OK
             self.assertEqual(checkHintBoard(board,num_hints), True)
         
     def test_solve_board(self):
-        tb = CreateEmptyBoard();
-        #set it up like in the solver's video
-        tb[0][0] = 7
-        tb[0][2] = 2
-        tb[0][4] = 5
-        tb[0][6] = 6
-        tb[1][5] = 3
-        tb[2][0] = 1
-        tb[2][5] = 9
-        tb[2][6] = 5
-        tb[3][0] = 8
-        tb[3][7] = 9
-        tb[4][1] = 4
-        tb[4][2] = 3
-        tb[4][6] = 7
-        tb[4][7] = 5
-        tb[5][1] = 9
-        tb[5][8] = 8
-        tb[6][2] = 9
-        tb[6][3] = 7
-        tb[6][8] = 5
-        tb[7][3] = 2
-        tb[8][2] = 7
-        tb[8][4] = 4
-        tb[8][6] = 2
-        tb[8][8] = 3
+        tb = CreateExampleTestBoard();
 
         self.assertEqual(SolveBoard(tb),True)
         self.assertEqual(checkSolution(tb),True)

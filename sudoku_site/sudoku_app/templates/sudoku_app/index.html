@@ -15,8 +15,17 @@
         
     </head>
     <body>
-        <div id="#game-wrapper">
-            <div id="game-headers"></div>
+        <div id="game-wrapper">
+            <div id="game-headers">
+                <form action="{% url 'sudoku_app:new_puzzle' %}" method="post">
+                    {% csrf_token %}
+                         <div>
+                               {{ diff_level_form }}
+                         </div>
+                         
+                </form>
+
+            </div>
             <div id="game-board"></div>
         </div>
     </body>

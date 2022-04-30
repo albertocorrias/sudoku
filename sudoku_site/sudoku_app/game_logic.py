@@ -66,8 +66,61 @@ def GetBoardWithHints(num_hints,deterministic_seed=None):
         
     return board
 
+def countEmptyRows(board):
+    ret = 0
+    for row in range(0,9):
+        if (sum(board[row])==0): ret += 1
+    return ret;
+
+def countEmptyColumns(board):
+    not_empty = 0;
+    for col in range(0,9):
+        for row in range(0,9):
+            if (board[row][col] != 0): 
+                not_empty = not_empty + 1
+                break;
+    return 9 - not_empty;
+
+def countEmptyQuadrants(board):
+    ret = 0
+    quad_rows = [0,3,6]
+    quad_cols = [0,3,6]
+    for row in quad_rows:
+        for col in quad_cols:
+            if (howManyTimesInQuadrant(0,row,col,board) == 9): ret = ret + 1
+    return ret;
+
+def AreHintsOnlyInRestrictedArea(board):
+    '''
+    See https://en.wikipedia.org/wiki/Mathematics_of_Sudoku
+    Under "Constraints of clue geometry"
+
+    This method returns True if the hints are NOT exclusively placed
+    in the area that would make the puzzle unsolvable 
+    '''
+    if (sum(board[0][:])> 0): return False #First row not empty
+    if (sum(board[8][:])> 0): return False #Last row not empty
+    if (howManyTimesInColumn(0,0,board) < 9): return False #First Column not empty
+    if (howManyTimesInColumn(0,8,board) < 9): return False #Last Column not empty
+    if (board[4][4]> 0): return False #point in the middle not empty
+    if (howManyTimesInQuadrant(0, 0, 0, board) < 9): return False #First quadrant not empty
+    if (howManyTimesInQuadrant(0, 0, 8, board) < 9): return False #Top right quadrant not empty
+    if (howManyTimesInQuadrant(0, 8, 0, board) < 9): return False #Bottom left quadrant not empty
+    if (howManyTimesInQuadrant(0, 8, 8, board) < 9): return False #Bottom right quadrant not empty
+
+    return True
+
 def checkHintBoard(board,expected_hints):
-    
+    '''
+    This methos checks for:
+    1. Expected number of hints is there
+    2. No repetition within row, column or quadrant
+    3. "Solvability" of the puzzzle. This means that this method checks for
+        the "Constraints of clue geometry" mentioned here https://en.wikipedia.org/wiki/Mathematics_of_Sudoku
+        a) Number of empty groups must be < 9
+        b) Largest rectangular "hole" < 30 squares
+        c) "conjecture" of area where no proper puzzle should have hints only in that area
+    '''    
     generated_hints = 0 #counter
     for row in range (0,len(board)):
         for col in range(0,len(board[row])):
@@ -80,8 +133,15 @@ def checkHintBoard(board,expected_hints):
                 if (howManyTimesInColumn(hint,col,board) > 1): return False
                 #check quadrants
                 if (howManyTimesInQuadrant(hint,row,col,board) > 1): return False
-                
+
+    #Check number of hints            
     if (generated_hints != expected_hints): return False
+
+    #Max 9 empty groups
+    if (countEmptyRows(board) + countEmptyColumns(board) + countEmptyQuadrants(board) > 8):
+        return False
+    
+    if AreHintsOnlyInRestrictedArea(board): return False
     
     return True
     
@@ -138,6 +198,7 @@ def GetOneFullPuzzle(num_hints, deterministic_seed=0):
     ret["solved_board"] = board
     ret["seed_at_end"] = deterministic_seed
     return ret
+
 
 
 
