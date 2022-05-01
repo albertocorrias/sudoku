@@ -2,24 +2,40 @@ from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 from django.urls import reverse
 from django.template import loader
-from .models import Game
-from sudoku_app.game_logic import GetOneFullPuzzle
-from sudoku_app.db_generation import GenerateDatabase
+from .models import Game, CurrentDifficultyLevel
+import random
+
 from sudoku_app.forms import DifficultyLevelForm
 def index(request):
     template = loader.get_template('sudoku_app/index.html')
 
-    print(Game.objects.all().count())
-    first_id = Game.objects.first().id
-    puzzle = Game.objects.get(id=first_id+15)
+    #Check if any current difficulty level was set
+    diff_level = Game.EASY
+    if (CurrentDifficultyLevel.objects.all().count() == 0):
+        CurrentDifficultyLevel.objects.create(current_level=Game.EASY)
+    else:
+        diff_level = CurrentDifficultyLevel.objects.values_list("current_level", flat=True)[0]
     
-    diff_level = DifficultyLevelForm()
+
+    game_objects = Game.objects.filter(difficulty = diff_level)
+    sel_idx = random.randint(0,game_objects.count()-1)
+    puzzle = game_objects[sel_idx]
+    
+    diff_level_form = DifficultyLevelForm(initial = {'difficulty_level' : diff_level})
     context = {
         'puzzle_hints': puzzle.hints_board,
         'puzzle_solution': puzzle.solved_board,
-        'diff_level_form' : diff_level
+        'diff_level_form' : diff_level_form
     }
     return HttpResponse(template.render(context, request))
 
-def new_puzzle():
-    print('hello')
+def new_puzzle(request):
+    if request.method =='POST':
+        form = DifficultyLevelForm(request.POST)
+    
+        if form.is_valid():            
+            supplied_diff_level = form.cleaned_data['difficulty_level'];
+            first_id = CurrentDifficultyLevel.objects.first().id
+            CurrentDifficultyLevel.objects.filter(id = first_id).update(current_level = supplied_diff_level)
+
+    return HttpResponseRedirect(reverse('sudoku_app:index'));
