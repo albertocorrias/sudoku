@@ -10,6 +10,14 @@ def CreateEmptyBoard():
             board[i].append(0)
     return board
 
+def CalculateBoardSum(board):
+    if (len(board)==0): return -1
+    ret = 0
+    for row in range(0,len(board)):
+        for col in range(0,len(board[0])):
+            ret += board[row][col]
+    return ret
+
 def howManyTimesInRow(num, row_num, board):
     return (board[row_num].count(num))
 
@@ -47,16 +55,18 @@ def GetBoardWithHints(num_hints,deterministic_seed=None):
     board = CreateEmptyBoard();
     possible_hints = [1,2,3,4,5,6,7,8,9]
     hints_successfully_placed  = 0
+    random.seed(deterministic_seed)
     while(hints_successfully_placed  < num_hints):
-        possible_position = random.Random(deterministic_seed).randint(0,80)
+        possible_position = random.randint(0,80)
         possible_row_idx = int(math.floor(possible_position/9))
         possible_col_idx = int(math.floor(possible_position%9))
         while (board[possible_row_idx][possible_col_idx] != 0):
+            
             possible_position = random.randint(0,80)
             possible_row_idx = int(math.floor(possible_position/9))
             possible_col_idx = int(math.floor(possible_position%9))
 
-        random.Random(deterministic_seed).shuffle(possible_hints)
+        random.shuffle(possible_hints)
         
         for i in range(0,len(possible_hints)):
             if (isValidAllocation(possible_hints[i],possible_row_idx,possible_col_idx,board) == True):
@@ -90,6 +100,9 @@ def countEmptyQuadrants(board):
             if (howManyTimesInQuadrant(0,row,col,board) == 9): ret = ret + 1
     return ret;
 
+def IsThereEmpty30SquaresArea(board):
+    return True;
+
 def AreHintsOnlyInRestrictedArea(board):
     '''
     See https://en.wikipedia.org/wiki/Mathematics_of_Sudoku
@@ -117,9 +130,12 @@ def checkHintBoard(board,expected_hints):
     2. No repetition within row, column or quadrant
     3. "Solvability" of the puzzzle. This means that this method checks for
         the "Constraints of clue geometry" mentioned here https://en.wikipedia.org/wiki/Mathematics_of_Sudoku
-        a) Number of empty groups must be < 9
-        b) Largest rectangular "hole" < 30 squares
-        c) "conjecture" of area where no proper puzzle should have hints only in that area
+        a) Number of empty groups must be <= 9
+        b) "conjecture" of area where no proper puzzle should have hints only in that area
+
+        Note that the other constraints (largest possible "hole is 30 squares)
+        is not checked here as the refrences provided are quite dubious and the solver
+        chould take care of it
     '''    
     generated_hints = 0 #counter
     for row in range (0,len(board)):
@@ -138,11 +154,11 @@ def checkHintBoard(board,expected_hints):
     if (generated_hints != expected_hints): return False
 
     #Max 9 empty groups
-    if (countEmptyRows(board) + countEmptyColumns(board) + countEmptyQuadrants(board) > 8):
+    if (countEmptyRows(board) + countEmptyColumns(board) + countEmptyQuadrants(board) > 9):
         return False
     
     if AreHintsOnlyInRestrictedArea(board): return False
-    
+
     return True
     
     
@@ -175,28 +191,26 @@ def SolveBoard(board_to_solve):
                 return False        
     return True
 
-def GetOneFullPuzzle(num_hints, deterministic_seed=0):
+def GetOneFullPuzzle(num_hints, deterministic_seed=None):
     ret = {
             "board_with_hints" : [],
-            "solved_board" : [],
-            "seed_at_end" : 0
+            "solved_board" : []
           }
     board = GetBoardWithHints(num_hints, deterministic_seed)
     good_hb = checkHintBoard(board,num_hints)
     while(good_hb == False):
-        deterministic_seed += 1 
         board = GetBoardWithHints(num_hints, deterministic_seed)
         good_hb = checkHintBoard(board,num_hints)
 
     ret["board_with_hints"] = copy.deepcopy(board)
     sol = SolveBoard(board)
     while(sol==False):
-        deterministic_seed += 1
+        if (deterministic_seed != None): deterministic_seed += 1
+
         board = GetBoardWithHints(num_hints, deterministic_seed)
         ret["board_with_hints"] = copy.deepcopy(board)        
         sol = SolveBoard(board)
     ret["solved_board"] = board
-    ret["seed_at_end"] = deterministic_seed
     return ret
 
 

@@ -4,7 +4,8 @@ from decimal import *
 from sudoku_app.game_logic import GetOneFullPuzzle,GetBoardWithHints,\
 isValidAllocation,howManyTimesInQuadrant,howManyTimesInRow,howManyTimesInColumn,\
 CreateEmptyBoard, SolveBoard,checkSolution, checkHintBoard, countEmptyRows, \
-countEmptyColumns,countEmptyQuadrants,AreHintsOnlyInRestrictedArea
+countEmptyColumns,countEmptyQuadrants,AreHintsOnlyInRestrictedArea,CalculateBoardSum, \
+IsThereEmpty30SquaresArea
 
 def CreateExampleTestBoard():
     tb = CreateEmptyBoard();
@@ -55,7 +56,21 @@ class TestGameLogic(TestCase):
             self.assertEqual(len(tb[i]),9)
             for k in range(0,len(tb[i])):
                 self.assertEqual(tb[i][k],0)
-                
+
+    def test_sum_of_board(self):
+        tb = CreateEmptyBoard();
+        self.assertEqual(CalculateBoardSum(tb),0)
+        tb[4][4] = 8
+        self.assertEqual(CalculateBoardSum(tb),8)
+        tb[7][7] = 9
+        self.assertEqual(CalculateBoardSum(tb),8+9)
+        #Try smaller board
+        smaller = [[1,2],[3,4]]
+        self.assertEqual(CalculateBoardSum(smaller),1+2+3+4)
+        #try empty board for coverage
+        empty = []
+        self.assertEqual(CalculateBoardSum(empty),-1)
+
     def test_same_row(self):
         tb = CreateEmptyBoard();
         num = 2
@@ -322,9 +337,9 @@ class TestGameLogic(TestCase):
         #Genearte many hint boards with different hints and check
         #40 is number used for easiest sudokus - we go all the way to 45 to be sure
         #Less than 20 may generate invalid boards
-        for num_hints in range(20,45):
-            board = GetBoardWithHints(num_hints,45);#45 seed works OK
-            self.assertEqual(checkHintBoard(board,num_hints), True)
+       for num_hints in range(20,45):
+           board = GetBoardWithHints(num_hints,44);#44 seed works OK
+           self.assertEqual(checkHintBoard(board,num_hints), True)
         
     def test_solve_board(self):
         tb = CreateExampleTestBoard();
@@ -333,8 +348,8 @@ class TestGameLogic(TestCase):
         self.assertEqual(checkSolution(tb),True)
         
     def test_get_one_full_puzzle(self):
-        num_hints = 29
-        result = GetOneFullPuzzle(num_hints, 44)#44 seed gives  a fast solution
+        num_hints = 41
+        result = GetOneFullPuzzle(num_hints, 11814)#11814 seed gives  a fast solution
         self.assertEqual(checkSolution(result["solved_board"]),True)
         self.assertEqual(checkHintBoard(result["board_with_hints"],num_hints), True)
         self.assertEqual(checkSolution(result["board_with_hints"]),False)
