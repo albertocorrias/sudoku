@@ -33,9 +33,35 @@ body {
  }
 
 #game-headers {
-    height: 7vmin;
+    height: 4vmin;
+    margin: 0;
     background-color: red;
+    position: relative;
+    font-family: Arial;
 }
+
+#difficulty_choices {
+    margin: auto;
+    position: relative;
+}
+#game-headers select {
+    /* A reset of styles, including removing the default dropdown arrow*/
+
+    /* Additional resets for further consistency*/
+    background-color: transparent;
+    border: none;
+    width: 30%;
+    font-family: inherit;
+    font-size: 3vmin;
+    cursor: pointer;
+    outline: none;
+    position: relative;
+    display: block;
+    padding: 0 30px 0 0;
+
+  }
+
+
 
 #game-board {
     display: grid;
@@ -58,6 +84,26 @@ body {
     align-items: center;
     color: var(--number-color);
 }
+
+.numpad-wrapper {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    column-gap: 1vmin;
+    row-gap: 1vmin;
+    position: relative;
+    margin-left: 3vmin;
+    border: 1px solid black;
+    padding: 1vmin;
+}
+.numpad-item{
+    text-align: center;
+    background-color: aqua;
+    border: 0;
+    border-radius: 6px;
+    font-size: 7.5vmin;
+    padding: 3vmin;
+}
+
 
 @keyframes show {
     0% {

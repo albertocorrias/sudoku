@@ -19,7 +19,7 @@
             <div id="game-headers">
                 <form action="{% url 'sudoku_app:new_puzzle' %}" method="post">
                     {% csrf_token %}
-                         <div>
+                         <div id="difficulty_choices">
                                {{ diff_level_form }}
                          </div>
                          
@@ -27,6 +27,17 @@
 
             </div>
             <div id="game-board"></div>
+        </div>
+        <div id = "numpad-wrapper" class="numpad-wrapper">
+            <div id = "numpad-item-1" class="numpad-item"> 1 </div>
+            <div id = "numpad-item-2" class="numpad-item"> 2 </div>
+            <div id = "numpad-item-3" class="numpad-item"> 3 </div>
+            <div id = "numpad-item-4" class="numpad-item"> 4 </div>
+            <div id = "numpad-item-5" class="numpad-item"> 5 </div>
+            <div id = "numpad-item-6" class="numpad-item"> 6 </div>
+            <div id = "numpad-item-7" class="numpad-item"> 7 </div>
+            <div id = "numpad-item-8" class="numpad-item"> 8 </div>
+            <div id = "numpad-item-9" class="numpad-item"> 9 </div>
         </div>
     </body>
 </html>
