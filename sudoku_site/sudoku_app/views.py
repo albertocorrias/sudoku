@@ -3,12 +3,14 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.urls import reverse
 from django.template import loader
 from .models import Game, CurrentDifficultyLevel
+from .db_generation import GenerateDatabase
 import random
 
 from sudoku_app.forms import DifficultyLevelForm
 def index(request):
     template = loader.get_template('sudoku_app/index.html')
-
+    if (Game.objects.all().count()==0):
+        GenerateDatabase();
     #Check if any current difficulty level was set
     diff_level = Game.EASY
     if (CurrentDifficultyLevel.objects.all().count() == 0):

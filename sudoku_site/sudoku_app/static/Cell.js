@@ -8,11 +8,13 @@ export default class Cell {
     #quadrant /*The sudoku quadrant this cell is in*/
     #value /*The value of this cell*/
     #isHint/*Whether or not this cell is a hint*/
+    #isClicked/*Whether or not this cell is "active" or clikced*/
     constructor(cellElement, x, y){
         this.cellElement = cellElement
         this.#x = x
         this.#y = y
         this.#isHint = false
+        this.#isClicked = false
         let quad_x = Math.floor(this.#y / (Globals.GRID_SIZE/3))
         let quad_y = Math.floor(this.#x / (Globals.GRID_SIZE/3))
         this.#quadrant =  quad_y + (Globals.GRID_SIZE/3)*quad_x
@@ -55,6 +57,10 @@ export default class Cell {
         return this.#value
     }
 
+    get isClicked() {
+        return this.#isClicked
+    }
+
     set value(v){
         this.#value = v
         this.cellElement.textContent = v //useful for debugging game logic
@@ -62,5 +68,9 @@ export default class Cell {
 
     set isHint(flag) {
         this.#isHint = flag
+    }
+
+    set isClicked(flag) {
+        this.#isClicked = flag
     }
 }

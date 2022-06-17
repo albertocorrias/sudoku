@@ -65,6 +65,27 @@ export default class Game {
                     cells_collection[new_index].focus()//allow for successive presses...
                 }         
             }) 
-        }        
+        }
+        
+        //setup event listener for numpad keys
+        for (let i = 0; i < Globals.GRID_SIZE; i++) {
+            const id_name = "numpad-item-" + String(i+1)
+            document.getElementById(id_name).addEventListener("click", function(evt) {
+                console.log(i+1)
+                for (let k = 0; k < all_cells.length; k++) {
+                    if (all_cells[k].isClicked == true) {
+                        all_cells[k].value = i+1
+                        grid.clearAllHighlighting()
+                        grid.highlightRelatedCells(k)
+                        grid.highlightCell(k)
+                        grid.highlightEqualValues(k)
+                        cells_collection[k].focus()
+                    }
+                }
+
+            }, true)
+
+        }
+
     }//constructor
 }//Game class

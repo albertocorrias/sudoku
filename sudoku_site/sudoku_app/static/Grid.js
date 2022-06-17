@@ -112,6 +112,8 @@ export default class Grid {
         for (let j = 0; j < all_cells.length; j++) {
             let elem_to_clear = all_cells[j].cellElement
             elem_to_clear.style.setProperty("--cell-background-colour", Globals.NORMAL_CELL_COLOR)
+            //clear the clicked flag as well
+            all_cells[j].isClicked = false
         }
     }
 
@@ -120,6 +122,8 @@ export default class Grid {
         let all_cells = this.#cells
         let elem_clicked = all_cells[cell_index].cellElement
         elem_clicked.style.setProperty("--cell-background-colour", Globals.HIGHLIGHTED_CELL_COLOR)
+        //set as clicked
+        all_cells[cell_index].isClicked = true
     }
 
     highlightRelatedCells(cell_index){

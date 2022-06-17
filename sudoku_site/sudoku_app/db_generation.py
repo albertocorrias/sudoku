@@ -50,4 +50,3 @@ def GenerateDatabase():
         Game.objects.create(hints_board = hint_board, solved_board = sol_board, difficulty=Game.EXPERT)
     print("Done with expert ones")
 
-#GenerateDatabase()
