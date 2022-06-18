@@ -82,7 +82,9 @@ body {
     font-weight: normal;
     justify-content: center;
     align-items: center;
+    text-align: center;
     color: var(--number-color);
+    font-size: var(--text-size);
 }
 
 .numpad-wrapper {

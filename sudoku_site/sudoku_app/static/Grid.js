@@ -152,6 +152,32 @@ export default class Grid {
             }
         }
     }
+
+    insertDigitIntoCell(cell_index,value_to_insert){
+        let all_cells = this.#cells
+        if (all_cells[cell_index].isProvisional == false) {
+            all_cells[cell_index].value = value_to_insert;//record new values
+        } else {//it is provisional
+            var existing = all_cells[cell_index].value
+            if (existing == undefined) {//nothing in there
+                all_cells[cell_index].value = value_to_insert;//record new values
+            } else {//provisional cell with other values in it already
+                const existing_numbers = existing.split(Globals.SEPARATING_CHARACTER_FOR_PROVISIONAL_NUMBERS)
+                if (existing_numbers.includes(value_to_insert) == false) {//we do nothing if it is already there
+                    const how_many = existing_numbers.length
+                    if (how_many > 1) {
+                        all_cells[cell_index].cellElement.style.setProperty("--text-size", "23%")
+                    }
+                    if (how_many > 3 && all_cells[cell_index].isMultiLine == false) {
+                        existing = existing + "\n"
+                        all_cells[cell_index].isMultiLine = true
+                    }
+                    all_cells[cell_index].value = existing.concat(Globals.SEPARATING_CHARACTER_FOR_PROVISIONAL_NUMBERS, value_to_insert);//concatenate new values
+                }
+            }
+        }
+
+    }
 } //end of Grid class
 
 function createCellElements(gridElement) {

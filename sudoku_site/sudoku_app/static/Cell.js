@@ -9,12 +9,16 @@ export default class Cell {
     #value /*The value of this cell*/
     #isHint/*Whether or not this cell is a hint*/
     #isClicked/*Whether or not this cell is "active" or clikced*/
+    #isProvisional/*Whether or not the user is inputting provisional numbers in this cell*/
+    #isMultiLine /*whether or not we had to insert a newline character because of too many provisional numbers*/
     constructor(cellElement, x, y){
         this.cellElement = cellElement
         this.#x = x
         this.#y = y
         this.#isHint = false
         this.#isClicked = false
+        this.#isProvisional = false
+        this.#isMultiLine = false
         let quad_x = Math.floor(this.#y / (Globals.GRID_SIZE/3))
         let quad_y = Math.floor(this.#x / (Globals.GRID_SIZE/3))
         this.#quadrant =  quad_y + (Globals.GRID_SIZE/3)*quad_x
@@ -61,6 +65,14 @@ export default class Cell {
         return this.#isClicked
     }
 
+    get isProvisional() {
+        return this.#isProvisional
+    }
+
+    get isMultiLine() {
+        return this.#isMultiLine
+    }
+
     set value(v){
         this.#value = v
         this.cellElement.textContent = v //useful for debugging game logic
@@ -72,5 +84,13 @@ export default class Cell {
 
     set isClicked(flag) {
         this.#isClicked = flag
+    }
+
+    set isProvisional(flag) {
+        this.#isProvisional = flag
+    }
+
+    set isMultiLine(flag) {
+        this.#isMultiLine = flag
     }
 }

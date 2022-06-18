@@ -25,6 +25,8 @@ export default class Game {
         //setup event listeners for all cells
         for (let i = 0; i < cells_collection.length; i++) {
             cells_collection[i].setAttribute("tabindex", 0)//critical line to allow focus and accepting key events
+            cells_collection[i].style.setProperty("--text-size", "100%")//set text size as default
+            
             //Handle clicks
             cells_collection[i].addEventListener("click", function(evt) {
                 grid.clearAllHighlighting()
@@ -37,13 +39,27 @@ export default class Game {
             cells_collection[i].addEventListener("keydown", function(evt) {
                 //accept number and delete key inputs only from non-hints cells. Hints should not change
                 if (all_cells[i].isHint == false) {
-                    //handle digits and delete activities
-                    if (isFinite(evt.key) == true) {
-                        all_cells[i].value = evt.key;//record new values
+                    //handle digits 
+                    if (isFinite(evt.key) == true && evt.key != "0") {//note we exclue 0, not part of the game
+                        grid.insertDigitIntoCell(i,evt.key)
                     }
+
                     if (evt.key == "Backspace" || evt.key == "Delete") {
                         all_cells[i].value = undefined //back to undefined value
+                        //restore size and colour, in case it was a provisional
+                        all_cells[i].isProvisional = false;
+                        //reset the multline flag
+                        all_cells[i].isMultiLine = false;
+                        all_cells[i].cellElement.style.setProperty("--text-size", "100%")
+                        all_cells[i].cellElement.style.setProperty("--number-color",Globals.NUMBER_COLOR_OF_USER_NUMBERS)
                     }
+
+                    if (evt.key == "p") {
+                        all_cells[i].cellElement.style.setProperty("--number-color",Globals.NUMBER_COLOR_OF_PROVISIONAL_NUMBERS)
+                        all_cells[i].cellElement.style.setProperty("--text-size", "50%")
+                        all_cells[i].isProvisional = true
+                    }
+
                     grid.clearAllHighlighting()
                     grid.highlightRelatedCells(i)
                     grid.highlightCell(i)
@@ -71,10 +87,10 @@ export default class Game {
         for (let i = 0; i < Globals.GRID_SIZE; i++) {
             const id_name = "numpad-item-" + String(i+1)
             document.getElementById(id_name).addEventListener("click", function(evt) {
-                console.log(i+1)
                 for (let k = 0; k < all_cells.length; k++) {
                     if (all_cells[k].isClicked == true) {
-                        all_cells[k].value = i+1
+                        grid.insertDigitIntoCell(k,i+1)
+
                         grid.clearAllHighlighting()
                         grid.highlightRelatedCells(k)
                         grid.highlightCell(k)
@@ -84,8 +100,6 @@ export default class Game {
                 }
 
             }, true)
-
         }
-
     }//constructor
 }//Game class
