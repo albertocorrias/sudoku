@@ -9,6 +9,9 @@ export default class Game {
         const cells_collection = document.getElementsByClassName("cell");
         var all_cells = grid.cells;
 
+        //hide the resume play
+        document.getElementById("resume_play_button").style.setProperty("--resume-play-visibility","none")
+
         //Put hints
         var cell_counter = 0
         for (let i=0; i < hints.length; i++){
@@ -101,5 +104,51 @@ export default class Game {
 
             }, true)
         }
+
+        //setup event listener for "P" key 
+        document.getElementById("provisional-button").addEventListener("click", function(evt) {
+            console.log('hello')
+            for (let i = 0; i < all_cells.length; i++) {
+                if (all_cells[i].isClicked == true) {
+                    all_cells[i].cellElement.style.setProperty("--number-color",Globals.NUMBER_COLOR_OF_PROVISIONAL_NUMBERS)
+                    all_cells[i].cellElement.style.setProperty("--text-size", "50%")
+                    all_cells[i].isProvisional = true
+                    all_cells[i].cellElement.focus()
+                }
+            }
+        }, true)
+
+        //setup event listener for submit button
+        document.getElementById("submit_button").addEventListener("click", function(evt) {
+            grid.clearAllHighlighting()
+            var cell_counter = 0
+            var all_correct = true
+            for (let i=0; i < solution.length; i++){
+                for (let j=0; j < solution[i].length; j++){
+                    if (all_cells[cell_counter].isHint == false) {//we do not bother hints...
+                        if ( all_cells[cell_counter].value == solution[i][j] ){
+                            all_cells[cell_counter].cellElement.style.setProperty("--cell-background-colour",Globals.CORRECT_ANSWER_BG_COLOUR)
+                            
+                        } else {
+                            all_cells[cell_counter].cellElement.style.setProperty("--cell-background-colour",Globals.WRONG_ANSWER_BG_COLOUR)
+                            all_correct = false
+                        }
+                    }
+                    cell_counter = cell_counter + 1
+                }
+            }
+            if (all_correct == true) {
+                alert("Well done! Your solution is correct!")
+            }
+            document.getElementById("resume_play_button").style.setProperty("--resume-play-visibility","inline")
+        }, true)
+
+        //setup event listener for resume play button
+        document.getElementById("resume_play_button").addEventListener("click", function(evt) {
+            grid.clearAllHighlighting()
+            document.getElementById("resume_play_button").style.setProperty("--resume-play-visibility","none")
+        }, true)
     }//constructor
 }//Game class
+
+

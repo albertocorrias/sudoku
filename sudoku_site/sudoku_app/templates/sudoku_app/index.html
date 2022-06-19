@@ -12,32 +12,40 @@
         {{puzzle_hints|json_script:"puzzle_hints"}}
         {{puzzle_solution|json_script:"puzzle_solution"}}
         <script src="{% static   'script.js' %}" type="module"></script>        
-        
+
     </head>
     <body>
-        <div id="game-wrapper">
-            <div id="game-headers">
-                <form action="{% url 'sudoku_app:new_puzzle' %}" method="post">
-                    {% csrf_token %}
-                         <div id="difficulty_choices">
-                               {{ diff_level_form }}
-                         </div>
-                         
-                </form>
+        <div id="header" class="header">Free online sudoku</div>
+        <div id="sudoku-game-wrapper" class="sudoku-game-wrapper">
+            <div id="board-wrapper" class="board-wrapper">
+                <div id="game-headers" class="game-headers">
+                    <form action="{% url 'sudoku_app:new_puzzle' %}" method="post">
+                        {% csrf_token %}
+                            <div id="difficulty_choices">
+                                {{ diff_level_form }}
+                            </div>
+                            
+                    </form>
 
+                </div>
+                <div id="game-board"></div>
+                <div id="board-footer" class="board-footer">
+                    <button type="button" class="submit_button" id="submit_button">Submit</button>
+                    <button type="button" class="submit_button resume_play_button" id="resume_play_button">Resume play</button>
+                </div>
             </div>
-            <div id="game-board"></div>
-        </div>
-        <div id = "numpad-wrapper" class="numpad-wrapper">
-            <div id = "numpad-item-1" class="numpad-item"> 1 </div>
-            <div id = "numpad-item-2" class="numpad-item"> 2 </div>
-            <div id = "numpad-item-3" class="numpad-item"> 3 </div>
-            <div id = "numpad-item-4" class="numpad-item"> 4 </div>
-            <div id = "numpad-item-5" class="numpad-item"> 5 </div>
-            <div id = "numpad-item-6" class="numpad-item"> 6 </div>
-            <div id = "numpad-item-7" class="numpad-item"> 7 </div>
-            <div id = "numpad-item-8" class="numpad-item"> 8 </div>
-            <div id = "numpad-item-9" class="numpad-item"> 9 </div>
+            <div id = "numpad-wrapper" class="numpad-wrapper">
+                <div id = "numpad-item-1" class="numpad-item"> 1 </div>
+                <div id = "numpad-item-2" class="numpad-item"> 2 </div>
+                <div id = "numpad-item-3" class="numpad-item"> 3 </div>
+                <div id = "numpad-item-4" class="numpad-item"> 4 </div>
+                <div id = "numpad-item-5" class="numpad-item"> 5 </div>
+                <div id = "numpad-item-6" class="numpad-item"> 6 </div>
+                <div id = "numpad-item-7" class="numpad-item"> 7 </div>
+                <div id = "numpad-item-8" class="numpad-item"> 8 </div>
+                <div id = "numpad-item-9" class="numpad-item"> 9 </div>
+                <div id = "provisional-button" class="numpad-item"> P </div>
+            </div>
         </div>
     </body>
 </html>
