@@ -1,9 +1,6 @@
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
-class SuokuGame(models.Model):
-    game_board = ArrayField(models.IntegerField(), size=81)
-
 class Game(models.Model):
     EASY = 'Easy'
     MEDIUM = 'Medium'
