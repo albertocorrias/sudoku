@@ -18,5 +18,3 @@ class Game(models.Model):
     solved_board = ArrayField( ArrayField(models.IntegerField(), size=9), size=9)
     difficulty = models.CharField(max_length = 50, choices = DIFFICULTY_LEVELS, default=EASY)
     
-class CurrentDifficultyLevel(models.Model):
-    current_level = models.CharField(max_length = 50, choices = Game.DIFFICULTY_LEVELS, default=Game.EASY)
