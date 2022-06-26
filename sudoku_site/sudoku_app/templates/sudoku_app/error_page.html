@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% load static %}
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-COmpatible" content="IE=Edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sudoku</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">  
+        <script src="{% static   'script.js' %}" type="module"></script>    
+    </head>
+    <body>
+        <div id="header" class="header">Free online sudoku</div>
+        <div style="text-align: center;"><p>An error was encountered. The requested puzzle number {{ puzzle_id }} does not exist. </p>
+            <button type="button" class="submit_button" id="return_main_page_button" onclick="location.href = {% url 'sudoku_app:index' %};">Return to main page</button>
+
+        </div>
+        
+    </body>
+</html>
