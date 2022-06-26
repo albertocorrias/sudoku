@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 from django.urls import reverse
 from django.template import loader
-from .models import Game, CurrentDifficultyLevel
+from .models import Game
 from .db_generation import GenerateDatabase
 import random
 
@@ -52,8 +52,6 @@ def new_puzzle(request):
     
         if form.is_valid():            
             supplied_diff_level = form.cleaned_data['difficulty_level'];
-            first_id = CurrentDifficultyLevel.objects.first().id
-            CurrentDifficultyLevel.objects.filter(id = first_id).update(current_level = supplied_diff_level)
 
             context = set_up_new_puzzle(supplied_diff_level)
     template = loader.get_template('sudoku_app/index.html')
