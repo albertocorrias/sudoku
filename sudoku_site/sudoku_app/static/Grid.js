@@ -126,6 +126,18 @@ export default class Grid {
         all_cells[cell_index].isClicked = true
     }
 
+    clearCellValue(cell_index){
+        let all_cells = this.#cells
+        all_cells[cell_index].value = undefined //back to undefined value
+        //restore size and colour, in case it was a provisional
+        all_cells[cell_index].isProvisional = false;
+        //reset the multline flag
+        all_cells[cell_index].isMultiLine = false;
+        all_cells[cell_index].cellElement.style.setProperty("--text-size", "100%")
+        all_cells[cell_index].cellElement.style.setProperty("--number-color",Globals.NUMBER_COLOR_OF_USER_NUMBERS)
+    }
+        
+    
     highlightRelatedCells(cell_index){
         let all_cells = this.#cells
         let on_same_row = this.getIndicesOnSameRow(cell_index)

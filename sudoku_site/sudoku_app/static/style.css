@@ -118,11 +118,20 @@ div.numpad-wrapper {
 }
 div.numpad-item{
     text-align: center;
-    background-color: rgb(148, 216, 216);
+    background-color: rgb(13, 13, 80);
+    color: antiquewhite;
     border: 0;
     border-radius: 6px;
     font-size: 7.5vmin;
     padding: 3vmin;
+}
+
+div.del-button{
+    font-size: 4vmin;
+    padding-top: 5vmin;
+    padding-bottom:  1vmin;
+    padding-left:  1vmin;
+    padding-right:  1vmin;
 }
 
 div.prov{

@@ -11,7 +11,7 @@ export default class Game {
 
         //hide the resume play
         document.getElementById("resume_play_button").style.setProperty("--resume-play-visibility","none")
-
+        
         //Put hints
         var cell_counter = 0
         for (let i=0; i < hints.length; i++){
@@ -48,13 +48,8 @@ export default class Game {
                     }
 
                     if (evt.key == "Backspace" || evt.key == "Delete") {
-                        all_cells[i].value = undefined //back to undefined value
-                        //restore size and colour, in case it was a provisional
-                        all_cells[i].isProvisional = false;
-                        //reset the multline flag
-                        all_cells[i].isMultiLine = false;
-                        all_cells[i].cellElement.style.setProperty("--text-size", "100%")
-                        all_cells[i].cellElement.style.setProperty("--number-color",Globals.NUMBER_COLOR_OF_USER_NUMBERS)
+                        grid.clearCellValue(i)
+                        cells_collection[i].focus()
                     }
 
                     if (evt.key == "p") {
@@ -105,15 +100,24 @@ export default class Game {
             }, true)
         }
 
-        //setup event listener for "P" key 
+        //setup event listener for "P" button on the keypad next to the game board
         document.getElementById("provisional-button").addEventListener("click", function(evt) {
-            console.log('hello')
             for (let i = 0; i < all_cells.length; i++) {
                 if (all_cells[i].isClicked == true) {
                     all_cells[i].cellElement.style.setProperty("--number-color",Globals.NUMBER_COLOR_OF_PROVISIONAL_NUMBERS)
                     all_cells[i].cellElement.style.setProperty("--text-size", "50%")
                     all_cells[i].isProvisional = true
                     all_cells[i].cellElement.focus()
+                }
+            }
+        }, true)
+
+        //setup event listener for "Del" button on the keypad next to the game board
+        document.getElementById("delete-button").addEventListener("click", function(evt) {
+            for (let i = 0; i < all_cells.length; i++) {
+                if (all_cells[i].isClicked == true) {
+                    grid.clearCellValue(i)
+                    cells_collection[i].focus()
                 }
             }
         }, true)
