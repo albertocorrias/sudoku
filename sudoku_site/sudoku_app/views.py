@@ -63,7 +63,10 @@ def new_specific_puzzle(request,puzzle_id):
         template = loader.get_template('sudoku_app/error_page.html')
     return HttpResponse(template.render(context, request))
 
-def new_puzzle(request):
+def new_puzzle_from_diff_level_change(request):
+    '''
+    This method is triggered by the change in level of difficulty form
+    '''
     if request.method =='POST':
         form = DifficultyLevelForm(request.POST)
     
@@ -74,3 +77,17 @@ def new_puzzle(request):
             sel_id = game_objects[sel_idx].id
 
     return HttpResponseRedirect(reverse('sudoku_app:new_spec_puzzle',  kwargs={'puzzle_id': sel_id}));
+
+def new_puzzle(request):
+    '''
+    This method is triggered by the "new game" button
+    '''
+    if request.method =='POST':
+        existing_puzzle_id = int(request.POST['new_game_button'])
+        existing_puzzle = Game.objects.filter(id=existing_puzzle_id).get();
+        difficulty_level = existing_puzzle.difficulty
+        game_objects = Game.objects.filter(difficulty = difficulty_level)
+        sel_idx = random.randint(0,game_objects.count()-1)
+        sel_id = game_objects[sel_idx].id
+
+    return HttpResponseRedirect(reverse('sudoku_app:new_spec_puzzle',  kwargs={'puzzle_id': sel_id})); 

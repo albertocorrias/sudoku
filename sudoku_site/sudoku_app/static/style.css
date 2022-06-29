@@ -19,6 +19,7 @@ input[type=number] {
 body {
     padding: 0;
     margin: 0;
+    background-color: rgb(162, 162, 165);
 }
 
 div.header {
@@ -37,12 +38,12 @@ div.header {
 div.sudoku-game-wrapper{
     display: flex;
     flex-wrap: nowrap;
-    background-color: rgb(162, 162, 165);
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    /*height: 100vh;*/
     margin: 0;
     font-size: 7.5vmin;
+    padding-top: 1vmin;
 }
 
 div.board-wrapper {
@@ -110,6 +111,29 @@ div.game-headers {
     font-size: var(--text-size);
 }
 
+div.right-controls{
+    display:block;
+}
+div.new-button-wrapper{
+    margin-left: 3vmin;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.new_game_button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top:1vmin;
+    margin-bottom:1vmin;
+}
 div.numpad-wrapper {
     display: grid;
     grid-template-columns: auto auto auto;
