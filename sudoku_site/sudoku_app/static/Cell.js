@@ -28,6 +28,8 @@ export default class Cell {
         cellElement.style.setProperty("--cell-border-top",Globals.NORMAL_CELL_BORDER)
         cellElement.style.setProperty("--cell-border-left",Globals.NORMAL_CELL_BORDER)
         cellElement.style.setProperty("--cell-border-right",Globals.NORMAL_CELL_BORDER)
+        cellElement.style.setProperty("--cell-border-color",Globals.CELL_BORDER_COLOR)
+        
 
         if (this.#y == 2 || this.#y == 5){
             cellElement.style.setProperty("--cell-border-bottom",Globals.QUADRANT_CELL_BORDER)

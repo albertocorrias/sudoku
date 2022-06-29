@@ -15,9 +15,9 @@ var Globals = {
          HIGHLIGHTED_CELL_COLOR: "#b6e1fc",
          HIGHLIGHTED_CELL_COLOR_SAME_NUMBER: "#c1e7e7",
          NORMAL_CELL_COLOR: "#F0FFFF",
-         NORMAL_CELL_BORDER: "thin dotted black",
-         QUADRANT_CELL_BORDER: "medium solid black",
-
+         NORMAL_CELL_BORDER: "thin dotted",
+         QUADRANT_CELL_BORDER: "medium solid",
+         CELL_BORDER_COLOR: "#333333",
          WRONG_ANSWER_BG_COLOUR: "red",
          CORRECT_ANSWER_BG_COLOUR: "green"
 };
