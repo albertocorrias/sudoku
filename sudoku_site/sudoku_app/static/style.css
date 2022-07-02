@@ -96,13 +96,16 @@ div.game-board {
 }
 
 div.cell {
-    /*display: flex;*/
     background-color: var(--cell-background-colour);
-    border-bottom: var(--cell-border-bottom);
-    border-left: var(--cell-border-left);
-    border-top: var(--cell-border-top);
-    border-right: var(--cell-border-right);
-    border-color: var(--cell-border-color);
+    border-bottom-width: var(--cell-border-width-bottom);
+    border-right-width: var(--cell-border-width-right);
+    border-left-width: var(--cell-border-width-left);
+    border-top-width: var(--cell-border-width-top);
+    border-bottom-style: var(--cell-border-style-bottom);
+    border-right-style: var(--cell-border-style-right);
+    border-left-style: var(--cell-border-style-left);
+    border-top-style: var(--cell-border-style-top);
+    border-color: #333333;
     font-weight: normal;
     justify-content: center;
     align-items: center;
@@ -152,6 +155,7 @@ div.del-button{
 div.prov{
     margin: auto;
 }
+
 
 div.board-footer{
     display: flex;

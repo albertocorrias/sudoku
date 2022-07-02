@@ -24,24 +24,33 @@ export default class Cell {
         this.#quadrant =  quad_y + (Globals.GRID_SIZE/3)*quad_x
         
         cellElement.style.setProperty("--cell-background-colour",Globals.NORMAL_CELL_COLOR)
-        cellElement.style.setProperty("--cell-border-bottom",Globals.NORMAL_CELL_BORDER)
-        cellElement.style.setProperty("--cell-border-top",Globals.NORMAL_CELL_BORDER)
-        cellElement.style.setProperty("--cell-border-left",Globals.NORMAL_CELL_BORDER)
-        cellElement.style.setProperty("--cell-border-right",Globals.NORMAL_CELL_BORDER)
         cellElement.style.setProperty("--cell-border-color",Globals.CELL_BORDER_COLOR)
-        
+
+        cellElement.style.setProperty("--cell-border-style-bottom",Globals.NORMAL_CELL_BORDER_STYLE)
+        cellElement.style.setProperty("--cell-border-style-top",Globals.NORMAL_CELL_BORDER_STYLE)
+        cellElement.style.setProperty("--cell-border-style-left",Globals.NORMAL_CELL_BORDER_STYLE)
+        cellElement.style.setProperty("--cell-border-style-right",Globals.NORMAL_CELL_BORDER_STYLE)
+
+        cellElement.style.setProperty("--cell-border-width-bottom",Globals.NORMAL_CELL_BORDER_WIDTH)
+        cellElement.style.setProperty("--cell-border-width-top",Globals.NORMAL_CELL_BORDER_WIDTH)
+        cellElement.style.setProperty("--cell-border-width-left",Globals.NORMAL_CELL_BORDER_WIDTH)
+        cellElement.style.setProperty("--cell-border-width-right",Globals.NORMAL_CELL_BORDER_WIDTH)
 
         if (this.#y == 2 || this.#y == 5){
-            cellElement.style.setProperty("--cell-border-bottom",Globals.QUADRANT_CELL_BORDER)
+            cellElement.style.setProperty("--cell-border-style-bottom",Globals.QUADRANT_CELL_BORDER_STYLE)
+            cellElement.style.setProperty("--cell-border-width-bottom",Globals.QUADRANT_CELL_BORDER_WIDTH)
         }
         if (this.#x == 2 || this.#x == 5){
-            cellElement.style.setProperty("--cell-border-right",Globals.QUADRANT_CELL_BORDER)
+            cellElement.style.setProperty("--cell-border-style-right",Globals.QUADRANT_CELL_BORDER_STYLE)
+            cellElement.style.setProperty("--cell-border-width-right",Globals.QUADRANT_CELL_BORDER_WIDTH)
         }
         if (this.#y == 3 || this.#y == 6){
-            cellElement.style.setProperty("--cell-border-top",Globals.QUADRANT_CELL_BORDER)
+            cellElement.style.setProperty("--cell-border-style-top",Globals.QUADRANT_CELL_BORDER_STYLE)
+            cellElement.style.setProperty("--cell-border-width-top",Globals.QUADRANT_CELL_BORDER_WIDTH)
         }
         if (this.#x == 3 || this.#x == 6){
-            cellElement.style.setProperty("--cell-border-left",Globals.QUADRANT_CELL_BORDER)
+            cellElement.style.setProperty("--cell-border-style-left",Globals.QUADRANT_CELL_BORDER_STYLE)
+            cellElement.style.setProperty("--cell-border-width-left",Globals.QUADRANT_CELL_BORDER_WIDTH)
         }  
 
         //set default text color as the color user input. The grid will override for the hints
