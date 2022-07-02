@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Sudoku</title>
         <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+        <link rel="stylesheet" type="text/css" media="screen and (max-width: 600px)" href="{% static 'smallscreen.css' %}">
 
         <script src="{% static   'Globals.js' %}" type="text/javascript"></script>
         {{puzzle_hints|json_script:"puzzle_hints"}}
@@ -21,23 +22,20 @@
                 <div id="game-headers" class="game-headers">
                     <form action="{% url 'sudoku_app:new_puzzle_from_diff_level_change' %}" method="post">
                         {% csrf_token %}
-                            <div id="difficulty_choices">
+                            <div id="difficulty_choices" class="difficulty_choices">
                                 {{ diff_level_form }}
                             </div>
                             
                     </form>
 
                 </div>
-                <div id="game-board"></div>
-
+                <div id="game-board" class="game-board"></div>
+                <div id="board-footer" class="board-footer">
+                    <button type="button" class="submit_button" id="submit_button">Submit</button>
+                    <button type="button" class="submit_button resume_play_button" id="resume_play_button">Resume play</button>
+                </div>
             </div>
             <div id="right-controls" class="right-controls">
-                <div id="new-button-wrapper" class="new-button-wrapper">
-                    <form action="{% url 'sudoku_app:new_puzzle' %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" name='new_game_button' class="submit_button" value="{{ puzzle_id }}">New game</button>
-                    </form>
-                </div>
                 <div id = "numpad-wrapper" class="numpad-wrapper">
                     <div id = "numpad-item-1" class="numpad-item"> 1 </div>
                     <div id = "numpad-item-2" class="numpad-item"> 2 </div>
@@ -51,11 +49,13 @@
                     <div id = "delete-button" class="numpad-item del-button"> Del </div>
                     <div id = "provisional-button" class="numpad-item"> P </div>
                 </div>
+                <div id="new-button-wrapper" class="new-button-wrapper">
+                    <form action="{% url 'sudoku_app:new_puzzle' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" name='new_game_button' class="submit_button" value="{{ puzzle_id }}">New game</button>
+                    </form>
+                </div>
             </div>
-        </div>
-        <div id="board-footer" class="board-footer">
-            <button type="button" class="submit_button" id="submit_button">Submit</button>
-            <button type="button" class="submit_button resume_play_button" id="resume_play_button">Resume play</button>
         </div>
     </body>
 </html>

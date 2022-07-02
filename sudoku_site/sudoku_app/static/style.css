@@ -60,14 +60,14 @@ div.game-headers {
     
 }
 
-#difficulty_choices {
+div.difficulty_choices {
     margin: 0;
     height: 4vmin;
     position: relative;
     width: 30%;
     background-color: #333333;
 }
-#game-headers select {
+div.game-headers select {
     /* A reset of styles, including removing the default dropdown arrow*/
 
     /* Additional resets for further consistency*/
@@ -86,7 +86,7 @@ div.game-headers {
 
 
 
-#game-board {
+div.game-board {
     display: grid;
     grid-template-columns: repeat(var(--grid-size), var(--cell-size));
     grid-template-rows: repeat(var(--grid-size), var(--cell-size));
@@ -95,8 +95,8 @@ div.game-headers {
     position: relative;
 }
 
-.cell {
-    display: flex;
+div.cell {
+    /*display: flex;*/
     background-color: var(--cell-background-colour);
     border-bottom: var(--cell-border-bottom);
     border-left: var(--cell-border-left);
@@ -162,7 +162,7 @@ div.board-footer{
     padding: 1vmin;
 }
 
-.submit_button {
+button.submit_button {
     border: none;
     color: white;
     padding: 1.5vmin 1.5vmin;
@@ -176,7 +176,7 @@ div.board-footer{
     border-radius: 6px;
   }
 
-.resume_play_button{
+button.resume_play_button{
     display: var(--resume-play-visibility);
     background-color: rgb(148, 216, 216);
 }

@@ -1,0 +1,34 @@
+
+div.sudoku-game-wrapper{
+    display: block;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+div.board-wrapper{
+    width: 100%;
+    display: block;
+    
+}
+div.game-board {
+    width:100%;
+    text-align: center;
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto auto auto;
+    padding: 0;
+    margin: 0;
+}
+
+div.numpad-wrapper {
+    grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto;    
+    width: 100%;
+    column-gap: 1vmin;
+    margin: 0;
+}
+
+div.numpad-item{
+    border-radius: 3px;
+    font-size: 5.5vmin;
+    padding: 1vmin;
+}
+
