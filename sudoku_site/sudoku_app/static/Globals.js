@@ -23,6 +23,6 @@ var Globals = {
          QUADRANT_CELL_BORDER_WIDTH: "0.4vmin",
 
          CELL_BORDER_COLOR: "#333333",
-         WRONG_ANSWER_BG_COLOUR: "red",
-         CORRECT_ANSWER_BG_COLOUR: "green"
+         WRONG_ANSWER_BG_COLOUR: "#a12e1d",
+         CORRECT_ANSWER_BG_COLOUR: "#93e281"
 };
