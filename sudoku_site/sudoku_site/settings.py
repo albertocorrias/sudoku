@@ -18,7 +18,6 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 #
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -28,8 +27,8 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 # Changed according to digital ocean suggestion
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
-
+#ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+ALLOWED_HOSTS = ['165.22.56.50','lisudoku.org', 'www.lisudoku.org','localhost']
 
 # Application definition
 
@@ -55,6 +54,7 @@ MIDDLEWARE = [
 #Added after suggestion from manage.py check --deploy
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = ['165.22.56.50','lisudoku.org', 'www.lisudoku.org','localhost']
 
 ROOT_URLCONF = 'sudoku_site.urls'
 
@@ -83,8 +83,8 @@ WSGI_APPLICATION = 'sudoku_site.wsgi.application'
 DATABASES = {
 
 }
-DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
-print (DEVELOPMENT_MODE)
+DEVELOPMENT_MODE = True;
+#os.getenv("DEVELOPMENT_MODE", "False") == "True"
 if DEVELOPMENT_MODE is True:
     DATABASES = {
     'default': {
@@ -139,8 +139,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = 'static/'
-
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
