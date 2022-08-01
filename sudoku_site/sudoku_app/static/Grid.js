@@ -174,7 +174,8 @@ export default class Grid {
             if (existing == undefined) {//nothing in there
                 all_cells[cell_index].value = value_to_insert;//record new values
             } else {//provisional cell with other values in it already
-                const existing_numbers = existing.split(Globals.SEPARATING_CHARACTER_FOR_PROVISIONAL_NUMBERS)
+                console.log(existing)
+                const existing_numbers = existing.toString().split(Globals.SEPARATING_CHARACTER_FOR_PROVISIONAL_NUMBERS)
                 if (existing_numbers.includes(value_to_insert) == false) {//we do nothing if it is already there
                     const how_many = existing_numbers.length
                     if (how_many > 1) {
@@ -184,7 +185,7 @@ export default class Grid {
                         existing = existing + "\n"
                         all_cells[cell_index].isMultiLine = true
                     }
-                    all_cells[cell_index].value = existing.concat(Globals.SEPARATING_CHARACTER_FOR_PROVISIONAL_NUMBERS, value_to_insert);//concatenate new values
+                    all_cells[cell_index].value = existing.toString().concat(Globals.SEPARATING_CHARACTER_FOR_PROVISIONAL_NUMBERS, value_to_insert);//concatenate new values
                 }
             }
         }

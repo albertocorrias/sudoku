@@ -79,29 +79,28 @@ WSGI_APPLICATION = 'sudoku_site.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-DATABASES = {
-
-}
-DEVELOPMENT_MODE = True;
-#os.getenv("DEVELOPMENT_MODE", "False") == "True"
-if DEVELOPMENT_MODE is True:
+if (DEBUG == True):
     DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'sudoku',
-        'USER': 'sudoku_user',
-        'PASSWORD': 'sudoku_password_1987',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'sudoku',
+            'USER': 'sudoku_user',
+            'PASSWORD': 'sudoku_password_1987',
+            'HOST': '127.0.0.1',
+            'PORT': '5432',
+        }
     }
-    }
-elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
-    if os.getenv("DATABASE_URL", None) is None:
-        raise Exception("DATABASE_URL environment variable not defined")
+else:
     DATABASES = {
-        "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'OPTIONS': {
+                'service': 'sudoku_service',
+                'passfile': '.sudoku_pgpass',
+            },
+        }
     }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
