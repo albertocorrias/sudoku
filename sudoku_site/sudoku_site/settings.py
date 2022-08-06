@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from django.core.management.utils import get_random_secret_key
 from pathlib import Path
 import sys
-import dj_database_url
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,7 +27,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
 #ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
-ALLOWED_HOSTS = ['165.22.56.50','lisudoku.org', 'www.lisudoku.org','localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['https://165.22.56.50','https://lisudoku.org', 'https://www.lisudoku.org','localhost', '127.0.0.1']
 
 # Application definition
 
@@ -54,7 +53,7 @@ MIDDLEWARE = [
 #Added after suggestion from manage.py check --deploy
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
-CSRF_TRUSTED_ORIGINS = ['165.22.56.50','lisudoku.org', 'www.lisudoku.org','localhost']
+CSRF_TRUSTED_ORIGINS = ['https://165.22.56.50','https://lisudoku.org', 'https://www.lisudoku.org','https://localhost', 'https://127.0.0.1']
 
 ROOT_URLCONF = 'sudoku_site.urls'
 
@@ -78,28 +77,15 @@ WSGI_APPLICATION = 'sudoku_site.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-if (DEBUG == True):
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'sudoku',
-            'USER': 'sudoku_user',
-            'PASSWORD': 'sudoku_password_1987',
-            'HOST': '127.0.0.1',
-            'PORT': '5432',
-        }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'OPTIONS': {
-                'service': 'sudoku_service',
-                'passfile': '.sudoku_pgpass',
-            },
-        }
-    }
+DATABASES = {
+'default': {
+    'ENGINE': 'django.db.backends.postgresql',
+    'OPTIONS': {
+        'service': 'sudoku_service',
+        'passfile': '.pgpass',
+    },
+}
+}
 
 
 # Password validation
