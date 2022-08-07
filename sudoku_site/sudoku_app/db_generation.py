@@ -1,17 +1,15 @@
 from sudoku_app.game_logic import GetOneFullPuzzle
 from .models import Game
 
-def GenerateDatabase():
+def GenerateDatabase(num_easy, num_medium, num_hard, num_expert,deterministic_seed=None):
     #clear any existing
-    print("Hello, generating database")
+    print("Clearing any puzzle in existing database")
     Game.objects.all().delete()
-    print("All clear")
+    print("All clear, generating puzzles now...")
 
-
-    num_puzzles = 4
     num_hints  = 40
-    for i in range(0,num_puzzles):
-        puzzle = GetOneFullPuzzle(num_hints)
+    for i in range(0,num_easy):
+        puzzle = GetOneFullPuzzle(num_hints, deterministic_seed)
         print(i)
         hint_board = puzzle["board_with_hints"]
         sol_board = puzzle["solved_board"]
@@ -21,8 +19,8 @@ def GenerateDatabase():
     
     
     num_hints  = 30
-    for i in range(0,num_puzzles):
-        puzzle = GetOneFullPuzzle(num_hints)
+    for i in range(0,num_medium):
+        puzzle = GetOneFullPuzzle(num_hints,deterministic_seed)
         print(i)
         hint_board = puzzle["board_with_hints"]
         sol_board = puzzle["solved_board"]
@@ -31,8 +29,8 @@ def GenerateDatabase():
     print("Done with medium ones")
 
     num_hints  = 25
-    for i in range(0,num_puzzles):
-        puzzle = GetOneFullPuzzle(num_hints)
+    for i in range(0,num_hard):
+        puzzle = GetOneFullPuzzle(num_hints,deterministic_seed)
         print(i)
         hint_board = puzzle["board_with_hints"]
         sol_board = puzzle["solved_board"]
@@ -41,8 +39,8 @@ def GenerateDatabase():
     print("Done with hard ones")
 
     num_hints  = 23
-    for i in range(0,num_puzzles):
-        puzzle = GetOneFullPuzzle(num_hints)
+    for i in range(0,num_expert):
+        puzzle = GetOneFullPuzzle(num_hints, deterministic_seed)
         print(i)
         hint_board = puzzle["board_with_hints"]
         sol_board = puzzle["solved_board"]

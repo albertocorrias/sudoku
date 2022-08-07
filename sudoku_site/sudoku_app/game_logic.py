@@ -133,9 +133,9 @@ def checkHintBoard(board,expected_hints):
         a) Number of empty groups must be <= 9
         b) "conjecture" of area where no proper puzzle should have hints only in that area
 
-        Note that the other constraints (largest possible "hole is 30 squares)
+        Note that the other constraints (largest possible "hole" is 30 squares)
         is not checked here as the refrences provided are quite dubious and the solver
-        chould take care of it
+        should take care of it
     '''    
     generated_hints = 0 #counter
     for row in range (0,len(board)):

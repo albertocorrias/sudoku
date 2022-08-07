@@ -11,7 +11,7 @@ from sudoku_app.forms import DifficultyLevelForm
 def index(request):
     
     if (Game.objects.all().count()==0):
-        GenerateDatabase();
+        GenerateDatabase(1,1,0,0,11814);#If db is empty, generate one easy and one medium
 
     game_objects = Game.objects.filter(difficulty = Game.EASY)
     sel_idx = random.randint(0,game_objects.count()-1)
