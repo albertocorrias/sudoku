@@ -3,6 +3,7 @@ from django.urls import reverse
 from decimal import *
 from sudoku_app.game_logic import GetOneFullPuzzle,GetBoardWithHints,\
 isValidAllocation,howManyTimesInQuadrant,howManyTimesInRow,howManyTimesInColumn,\
+isPresentInRow, isPresentInColumn, getQuadnumber, isPresentInQuadrant,\
 CreateEmptyBoard, SolveBoard,checkSolution, checkHintBoard, countEmptyRows, \
 countEmptyColumns,countEmptyQuadrants,AreHintsOnlyInRestrictedArea,CalculateBoardSum, \
 IsThereEmpty30SquaresArea
@@ -82,10 +83,14 @@ class TestGameLogic(TestCase):
                 if (num_to_try == num):
                     if (row==row_idx):
                         self.assertEqual(howManyTimesInRow(num_to_try,row,tb),1)
+                        self.assertEqual(isPresentInRow(num_to_try,row,tb), True)
                     else:
                         self.assertEqual(howManyTimesInRow(num_to_try,row,tb),0)
+                        self.assertEqual(isPresentInRow(num_to_try,row,tb), False)
                 else:
                     self.assertEqual(howManyTimesInRow(num_to_try,row,tb),0)
+                    self.assertEqual(isPresentInRow(num_to_try,row,tb), False)
+        
                     
     def test_same_col(self):
         tb = CreateEmptyBoard();
@@ -98,10 +103,13 @@ class TestGameLogic(TestCase):
                 if (num_to_try == num):
                     if (col==col_idx):
                         self.assertEqual(howManyTimesInColumn(num_to_try,col,tb),1)
+                        self.assertEqual(isPresentInColumn(num_to_try,col,tb), True)
                     else:
                         self.assertEqual(howManyTimesInColumn(num_to_try,col,tb),0)
+                        self.assertEqual(isPresentInColumn(num_to_try,col,tb), False)
                 else:
                     self.assertEqual(howManyTimesInColumn(num_to_try,col,tb),0)
+                    self.assertEqual(isPresentInColumn(num_to_try,col,tb), False)
                         
                 
     def test_same_quadrant(self):
@@ -119,10 +127,13 @@ class TestGameLogic(TestCase):
                     if (num_to_try == num):
                         if (row in quad_rows) and (col in quad_cols):
                             self.assertEqual(howManyTimesInQuadrant(num_to_try,row,col,tb),1)
+                            self.assertEqual(isPresentInQuadrant(num_to_try,row,col,tb), True)
                         else:
                             self.assertEqual(howManyTimesInQuadrant(num_to_try,row,col,tb),0)
+                            self.assertEqual(isPresentInQuadrant(num_to_try,row,col,tb), False)
                     else:
                         self.assertEqual(howManyTimesInQuadrant(num_to_try,row,col,tb),0)
+                        self.assertEqual(isPresentInQuadrant(num_to_try,row,col,tb), False)
                     
     def test_same_quadrant_2(self):
         tb = CreateEmptyBoard();

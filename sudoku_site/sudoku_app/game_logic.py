@@ -42,14 +42,104 @@ def howManyTimesInQuadrant(num, row_num, col_num, board):
                    how_many += 1
     return how_many;
 
+def isPresentInRow(num, row_num, board):
+    '''
+    Returns true is num is present in row_num of the board
+    '''
+    return (num in board[row_num])
+
+def isPresentInColumn(num,col_num,board):
+    '''
+    Returns true is num is present in col_num of the board
+    '''
+    for row in range(0,9):
+        if (board[row][col_num] == num):
+            return True
+    return False
+
+# NOTE: These are hard-coded coordinates of each quadrant. It is not pretty,
+# but these will be used by the check for presence in the quadrant,
+# which, in turn, is called many times by the solver.
+# Profiling revealed that hard-coding these values saves 
+# 50% of the computation time
+quad_0 = [[0,0],[0,1], [0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2]]
+quad_1 = [[0,3],[0,4], [0,5],[1,3],[1,4],[1,5],[2,3],[2,4],[2,5]]
+quad_2 = [[0,6],[0,7], [0,8],[1,6],[1,7],[1,8],[2,6],[2,7],[2,8]]
+quad_3 = [[3,0],[3,1], [3,2],[4,0],[4,1],[4,2],[5,0],[5,1],[5,2]]
+quad_4 = [[3,3],[3,4], [3,5],[4,3],[4,4],[4,5],[5,3],[5,4],[5,5]]
+quad_5 = [[3,6],[3,7], [3,8],[4,6],[4,7],[4,8],[5,6],[5,7],[5,8]]
+quad_6 = [[6,0],[6,1], [6,2],[7,0],[7,1],[7,2],[8,0],[8,1],[8,2]]
+quad_7 = [[6,3],[6,4], [6,5],[7,3],[7,4],[7,5],[8,3],[8,4],[8,5]]
+quad_8 = [[6,6],[6,7], [6,8],[7,6],[7,7],[7,8],[8,6],[8,7],[8,8]]
+quads = [quad_0, quad_1, quad_2, quad_3, quad_4, quad_5, quad_6, quad_7, quad_8]
+
+def getQuadnumber(row,col):
+    '''
+    Method that returns the numbe rof the quadrant. It is not pretty,
+    but avoding loops and hard-coding numbers showed to save a lot of time.
+    '''
+    if (row==0):
+        if ((col==0) or (col==1) or (col==2)): return 0
+        if ((col==3) or (col==4) or (col==5)): return 1
+        if ((col==6) or (col==7) or (col==8)): return 2
+    if (row==1):
+        if ((col==0) or (col==1) or (col==2)): return 0
+        if ((col==3) or (col==4) or (col==5)): return 1
+        if ((col==6) or (col==7) or (col==8)): return 2
+    if (row==2):
+        if ((col==0) or (col==1) or (col==2)): return 0
+        if ((col==3) or (col==4) or (col==5)): return 1
+        if ((col==6) or (col==7) or (col==8)): return 2
+    if (row==3):
+        if ((col==0) or (col==1) or (col==2)): return 3
+        if ((col==3) or (col==4) or (col==5)): return 4
+        if ((col==6) or (col==7) or (col==8)): return 5
+    if (row==4):
+        if ((col==0) or (col==1) or (col==2)): return 3
+        if ((col==3) or (col==4) or (col==5)): return 4
+        if ((col==6) or (col==7) or (col==8)): return 5
+    if (row==5):
+        if ((col==0) or (col==1) or (col==2)): return 3
+        if ((col==3) or (col==4) or (col==5)): return 4
+        if ((col==6) or (col==7) or (col==8)): return 5
+    if (row==6):
+        if ((col==0) or (col==1) or (col==2)): return 6
+        if ((col==3) or (col==4) or (col==5)): return 7
+        if ((col==6) or (col==7) or (col==8)): return 8
+    if (row==7):
+        if ((col==0) or (col==1) or (col==2)): return 6
+        if ((col==3) or (col==4) or (col==5)): return 7
+        if ((col==6) or (col==7) or (col==8)): return 8
+    if (row==8):
+        if ((col==0) or (col==1) or (col==2)): return 6
+        if ((col==3) or (col==4) or (col==5)): return 7
+        if ((col==6) or (col==7) or (col==8)): return 8
+
+def isPresentInQuadrant(num, row_num, col_num, board):
+    '''
+    Returns true if num is present in the same quadrant as
+    position (row_num,col_num) in the board, false otherwise
+    '''
+    this_quad = getQuadnumber(row_num,col_num)
+    to_be_examined = quads[this_quad];
+    for cell in to_be_examined:
+            row = cell[0]
+            col = cell[1]
+            if (board[row][col] == num):
+                   return True;
+    return False;
+
 def isValidAllocation(num,row,col,board):
-    if (howManyTimesInRow(num,row,board) > 0 or\
-        howManyTimesInColumn(num,col,board) > 0 or\
-        howManyTimesInQuadrant(num,row,col,board) > 0 or num ==0):
+    '''
+    Returns true if allocating num at position (row,col)
+    of the board is OK for sudoku rules.
+    '''
+    if (isPresentInRow(num,row,board) == True or\
+        isPresentInColumn(num,col,board) == True or\
+        isPresentInQuadrant(num,row,col,board) == True or num ==0):
         return False
     else:
         return True
-
 
 def GetBoardWithHints(num_hints,deterministic_seed=None):
     board = CreateEmptyBoard();
