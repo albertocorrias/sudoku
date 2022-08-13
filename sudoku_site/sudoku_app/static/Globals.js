@@ -4,14 +4,14 @@ var Globals = {
          CELL_SIZE: 8,
          BOARD_BORDER_WIDTH: 0.9,
 
-         NUMBER_COLOR_OF_HINTS: "#2e4718", /*this is a very dark green*/
+         NUMBER_COLOR_OF_HINTS: "#68823d", /*this is a very dark green*/
          NUMBER_COLOR_OF_USER_NUMBERS: "#00000", /*Black*/
          NUMBER_COLOR_OF_PROVISIONAL_NUMBERS: "#866c22",/*This is the color when the user puts more than 
                                                          one number on the cell. It's a dark yellow*/
 
          SEPARATING_CHARACTER_FOR_PROVISIONAL_NUMBERS: "-",
 
-         HIGHLIGHTED_RELATED_CELL_COLOR: "#fbd7d0",/*This is the same-row, same-column, same-quadrant colour*/
+         HIGHLIGHTED_RELATED_CELL_COLOR: "#fae7df",/*This is the same-row, same-column, same-quadrant colour*/
          HIGHLIGHTED_CELL_COLOR: "#b6e1fc",
          HIGHLIGHTED_CELL_COLOR_SAME_NUMBER: "#c1e7e7",
          NORMAL_CELL_COLOR: "#F0FFFF",
@@ -23,6 +23,6 @@ var Globals = {
          QUADRANT_CELL_BORDER_WIDTH: "0.4vmin",
 
          CELL_BORDER_COLOR: "#333333",
-         WRONG_ANSWER_BG_COLOUR: "#a12e1d",
+         WRONG_ANSWER_BG_COLOUR: "#e57c4e",
          CORRECT_ANSWER_BG_COLOUR: "#93e281"
 };

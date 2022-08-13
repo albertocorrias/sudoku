@@ -48,3 +48,6 @@ def GenerateDatabase(num_easy, num_medium, num_hard, num_expert,deterministic_se
         Game.objects.create(hints_board = hint_board, solved_board = sol_board, difficulty=Game.EXPERT)
     print("Done with expert ones")
 
+#To re-generate a new db, uncomment the following two lines
+#Game.objects.all().delete()
+#GenerateDatabase(10,10,10,10)
