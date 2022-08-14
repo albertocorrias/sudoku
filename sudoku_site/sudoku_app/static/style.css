@@ -39,7 +39,7 @@ div.sudoku-game-wrapper{
     display: flex;
     flex-wrap: nowrap;
     justify-content: center;
-    align-items: center;
+    align-items: top;
     /*height: 100vh;*/
     margin: 0;
     font-size: 7.5vmin;
@@ -51,39 +51,39 @@ div.board-wrapper {
     grid-template-columns: 1 auto auto auto;
  }
 
-div.game-headers {
-    height: 4vmin;
-    background-color: rgb(162, 162, 165);
-    position: relative;
-    font-family: Arial;
-    font-size: 3vmin;
-    
+
+div.right_controls{
+    display: block;
+    padding: 0;
+    margin-left: 3vmin;
 }
 
-div.difficulty_choices {
-    margin: 0;
-    height: 4vmin;
-    position: relative;
-    width: 30%;
-    background-color: #333333;
-}
-div.game-headers select {
-    /* A reset of styles, including removing the default dropdown arrow*/
 
-    /* Additional resets for further consistency*/
-    background-color: transparent;
-    border: none;
-    width: 100%;
-    font-family: inherit;
-    font-size: 3vmin;
+
+div.game-options-wrapper {
+    background-color: darkgreen;
+    font-size: 2vmin;
+    border-radius: 1vmin;
+    margin-right: 1vmin;
+    padding: 1vmin;
     color: antiquewhite;
+    display:block;
+}
+
+div.game-options-wrapper select {
+    /* A reset of styles, including removing the default dropdown arrow*/
+    background-color: rgb(13, 13, 80);
+    border: none;
+    width: 60%;
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
     cursor: pointer;
     outline: none;
     position: relative;
-    display: block;
-
-  }
-
+    display:inline;
+    margin: 1vmin;
+}
 
 
 div.game-board {
@@ -116,13 +116,13 @@ div.cell {
 
 div.right-controls{
     display:block;
+    margin-left: 3vmin;
 }
 div.new-button-wrapper{
-    margin-left: 3vmin;
     padding-top: 0px;
     padding-bottom: 0px;
     text-align: center;
-    vertical-align: middle;
+    vertical-align: top;
 }
 
 div.numpad-wrapper {
@@ -131,8 +131,8 @@ div.numpad-wrapper {
     column-gap: 1vmin;
     row-gap: 1vmin;
     position: relative;
-    margin-left: 3vmin;
-    padding: 1vmin;
+    margin-bottom: 1vmin;
+    margin-top: 1vmin;
 }
 div.numpad-item{
     text-align: center;
@@ -150,10 +150,6 @@ div.del-button{
     padding-bottom:  1vmin;
     padding-left:  1vmin;
     padding-right:  1vmin;
-}
-
-div.prov{
-    margin: auto;
 }
 
 
@@ -180,6 +176,10 @@ button.submit_button {
     border-radius: 6px;
   }
 
+button.new_game_button{
+    margin: 0;
+    vertical-align: top;
+}
 button.resume_play_button{
     display: var(--resume-play-visibility);
     background-color: rgb(148, 216, 216);

@@ -1,3 +1,4 @@
+import re
 from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 from django.urls import reverse
@@ -6,7 +7,7 @@ from .models import Game
 from .db_generation import GenerateDatabase
 import random
 
-from sudoku_app.forms import DifficultyLevelForm
+from sudoku_app.forms import GameSettingsForm
 
 def index(request):
     
@@ -16,10 +17,11 @@ def index(request):
     game_objects = Game.objects.filter(difficulty = Game.EASY)
     sel_idx = random.randint(0,game_objects.count()-1)
     sel_id = game_objects[sel_idx].id
-    return HttpResponseRedirect(reverse('sudoku_app:new_spec_puzzle',  kwargs={'puzzle_id': sel_id}));
+    request.session['game_type'] = GameSettingsForm.LEISURE #If user lands without any puzzle, start in leisure mode
+    return HttpResponseRedirect(reverse('sudoku_app:new_specific_puzzle',  kwargs={'puzzle_id': sel_id}));
 
 
-def set_up_new_puzzle(puzzle_id):
+def get_context(request, puzzle_id):
     '''
     A helper method that, given a puzzle id, returns a dictionary with
     - A game board object with hints. This is chosen randomly from the database
@@ -35,11 +37,12 @@ def set_up_new_puzzle(puzzle_id):
     if (error_code ==0):
         puzzle = puzzle_qs.get() #the actual object
         difficulty_level = puzzle.difficulty
-        diff_level_form = DifficultyLevelForm(initial = {'difficulty_level' : difficulty_level})
+        game_type = request.session.get('game_type')
+        game_settings_form = GameSettingsForm(initial = {'difficulty_level' : difficulty_level, 'game_type' : game_type})
         ret = {
             'puzzle_hints': puzzle.hints_board,
             'puzzle_solution': puzzle.solved_board,
-            'diff_level_form' : diff_level_form,
+            'game_settings_form' : game_settings_form,
             'error_code' : error_code,
             'puzzle_id' : puzzle_id
         }
@@ -56,7 +59,7 @@ def set_up_new_puzzle(puzzle_id):
 
 def new_specific_puzzle(request,puzzle_id):
     
-    context = set_up_new_puzzle(puzzle_id)
+    context = get_context(request, puzzle_id)
     if (context["error_code"] == 0):
         template = loader.get_template('sudoku_app/index.html')
     else:
@@ -68,21 +71,23 @@ def new_puzzle_from_diff_level_change(request):
     This method is triggered by the change in level of difficulty form
     '''
     if request.method =='POST':
-        form = DifficultyLevelForm(request.POST)
-    
+        form = GameSettingsForm(request.POST)
         if form.is_valid():            
             supplied_diff_level = form.cleaned_data['difficulty_level'];
+            supplied_game_type= form.cleaned_data['game_type'];
             game_objects = Game.objects.filter(difficulty = supplied_diff_level)
             sel_idx = random.randint(0,game_objects.count()-1)
             sel_id = game_objects[sel_idx].id
+            request.session['game_type'] = supplied_game_type;#Store the game type in the session
 
-    return HttpResponseRedirect(reverse('sudoku_app:new_spec_puzzle',  kwargs={'puzzle_id': sel_id}));
+    return HttpResponseRedirect(reverse('sudoku_app:new_specific_puzzle',  kwargs={'puzzle_id': sel_id}));
 
 def new_puzzle(request):
     '''
     This method is triggered by the "new game" button
     '''
     if request.method =='POST':
+        
         existing_puzzle_id = int(request.POST['new_game_button'])
         existing_puzzle = Game.objects.filter(id=existing_puzzle_id).get();
         difficulty_level = existing_puzzle.difficulty
@@ -90,4 +95,4 @@ def new_puzzle(request):
         sel_idx = random.randint(0,game_objects.count()-1)
         sel_id = game_objects[sel_idx].id
 
-    return HttpResponseRedirect(reverse('sudoku_app:new_spec_puzzle',  kwargs={'puzzle_id': sel_id})); 
+    return HttpResponseRedirect(reverse('sudoku_app:new_specific_puzzle',  kwargs={'puzzle_id': sel_id})); 

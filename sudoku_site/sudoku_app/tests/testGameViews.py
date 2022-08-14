@@ -4,6 +4,7 @@ from django.urls import reverse
 from decimal import *
 from sudoku_app.models import Game
 from sudoku_app.game_logic import CreateEmptyBoard, SolveBoard
+from sudoku_app.forms import GameSettingsForm
 
 def CreateExampleTestBoard():
     tb = CreateEmptyBoard();
@@ -72,12 +73,16 @@ class TestGameViews(TestCase):
         Game.objects.create(hints_board = saved_hints, solved_board = hint_brd, difficulty=Game.EASY)
         self.assertEqual(Game.objects.all().count(), 1)
 
+        session = self.client.session
+        session['game_type'] = GameSettingsForm.LEISURE
+        session.save()
+
         id_of_puzzle = Game.objects.filter(difficulty=Game.EASY).get().id
-        response = self.client.get(reverse('sudoku_app:new_spec_puzzle', kwargs={'puzzle_id': id_of_puzzle}))
+        response = self.client.get(reverse('sudoku_app:new_specific_puzzle', kwargs={'puzzle_id': id_of_puzzle}))
         self.assertEqual(response.status_code, 200)#no issues
 
         #Now try an Id that does not exist
-        response = self.client.get(reverse('sudoku_app:new_spec_puzzle', kwargs={'puzzle_id': id_of_puzzle+25987}))
+        response = self.client.get(reverse('sudoku_app:new_specific_puzzle', kwargs={'puzzle_id': id_of_puzzle+25987}))
         self.assertEqual(response.status_code, 200)#still no issues, error page should appear instead
         self.assertContains(response, 'error')
 
@@ -89,10 +94,19 @@ class TestGameViews(TestCase):
         Game.objects.create(hints_board = saved_hints, solved_board = hint_brd, difficulty=Game.EASY)
         Game.objects.create(hints_board = saved_hints, solved_board = hint_brd, difficulty=Game.EASY)
         self.assertEqual(Game.objects.all().count(), 2)
+
+        session = self.client.session
+        session['game_type'] = GameSettingsForm.LEISURE
+        session.save()
+
         one_id = Game.objects.all().first().id
         other_id = Game.objects.all().last().id
-        response = self.client.get(reverse('sudoku_app:new_spec_puzzle', kwargs={'puzzle_id': one_id}))
+        response = self.client.get(reverse('sudoku_app:new_specific_puzzle', kwargs={'puzzle_id': one_id}))
         self.assertEqual(response.status_code, 200)#no issues
+
+        session = self.client.session
+        session['game_type'] = GameSettingsForm.LEISURE
+        session.save()
 
         response = self.client.post(reverse('sudoku_app:new_puzzle'), {'new_game_button': one_id})
         self.assertEqual(response.status_code, 302)#should re-direct
@@ -112,12 +126,19 @@ class TestGameViews(TestCase):
         Game.objects.create(hints_board = saved_hints, solved_board = hint_brd, difficulty=Game.EASY)
         Game.objects.create(hints_board = saved_hints, solved_board = hint_brd, difficulty=Game.MEDIUM)
         self.assertEqual(Game.objects.all().count(), 2)
+
+        session = self.client.session
+        session['game_type'] = GameSettingsForm.LEISURE
+        session.save()
+
         easy_ID = Game.objects.filter(difficulty=Game.EASY).get().id
         medium_id = Game.objects.filter(difficulty=Game.MEDIUM).get().id
-        response = self.client.get(reverse('sudoku_app:new_spec_puzzle', kwargs={'puzzle_id': easy_ID}))
+        response = self.client.get(reverse('sudoku_app:new_specific_puzzle', kwargs={'puzzle_id': easy_ID}))
         self.assertEqual(response.status_code, 200)#no issues
 
-        response = self.client.post(reverse('sudoku_app:new_puzzle_from_diff_level_change'), {'difficulty_level': Game.MEDIUM})
+
+        response = self.client.post(reverse('sudoku_app:new_puzzle_from_diff_level_change'), \
+                                    {'difficulty_level': Game.MEDIUM, 'game_type' : GameSettingsForm.LEISURE})
         self.assertEqual(response.status_code, 302)#should re-direct
         expected_url = '/' + str(medium_id)
         self.assertRedirects(response, expected_url, status_code=302,target_status_code=200)

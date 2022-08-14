@@ -16,26 +16,28 @@
 
     </head>
     <body>
-        <div id="header" class="header">lisudoku.org | Free online sudoku</div>
+        <div id="header" class="header">lisudoku.org | free online sudoku</div>
         <div id="sudoku-game-wrapper" class="sudoku-game-wrapper">
             <div id="board-wrapper" class="board-wrapper">
-                <div id="game-headers" class="game-headers">
-                    <form action="{% url 'sudoku_app:new_puzzle_from_diff_level_change' %}" method="post">
-                        {% csrf_token %}
-                            <div id="difficulty_choices" class="difficulty_choices">
-                                {{ diff_level_form }}
-                            </div>
-                            
-                    </form>
-
-                </div>
                 <div id="game-board" class="game-board"></div>
                 <div id="board-footer" class="board-footer">
                     <button type="button" class="submit_button" id="submit_button">Check your answer</button>
                     <button type="button" class="submit_button resume_play_button" id="resume_play_button">Resume play</button>
                 </div>
+
             </div>
             <div id="right-controls" class="right-controls">
+                <div id="game-options-wrapper" class="game-options-wrapper">
+                    <form action="{% url 'sudoku_app:new_puzzle_from_diff_level_change' %}" method="post">
+                        {% csrf_token %}
+                        {% for field in game_settings_form %}
+
+                            {{field.label}}: {{ field }}
+                            <br/>
+                        {% endfor %}
+                    </form>
+                </div>
+
                 <div id = "numpad-wrapper" class="numpad-wrapper">
                     <div id = "numpad-item-1" class="numpad-item"> 1 </div>
                     <div id = "numpad-item-2" class="numpad-item"> 2 </div>
@@ -52,7 +54,7 @@
                 <div id="new-button-wrapper" class="new-button-wrapper">
                     <form action="{% url 'sudoku_app:new_puzzle' %}" method="post">
                         {% csrf_token %}
-                        <button type="submit" name='new_game_button' class="submit_button" value="{{ puzzle_id }}">New game</button>
+                        <button type="submit" name='new_game_button' class="submit_button new_game_button" value="{{ puzzle_id }}">New game</button>
                     </form>
                 </div>
             </div>
