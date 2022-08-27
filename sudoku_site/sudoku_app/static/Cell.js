@@ -36,18 +36,34 @@ export default class Cell {
         cellElement.style.setProperty("--cell-border-width-left",Globals.NORMAL_CELL_BORDER_WIDTH)
         cellElement.style.setProperty("--cell-border-width-right",Globals.NORMAL_CELL_BORDER_WIDTH)
 
+        if (this.#y == 8){
+            cellElement.style.setProperty("--cell-border-style-bottom",Globals.QUADRANT_CELL_BORDER_STYLE)
+            cellElement.style.setProperty("--cell-border-width-bottom",Globals.BOARD_BORDER_WIDTH)
+        }
         if (this.#y == 2 || this.#y == 5){
             cellElement.style.setProperty("--cell-border-style-bottom",Globals.QUADRANT_CELL_BORDER_STYLE)
             cellElement.style.setProperty("--cell-border-width-bottom",Globals.QUADRANT_CELL_BORDER_WIDTH)
+        }
+        if (this.#x == 8){
+            cellElement.style.setProperty("--cell-border-style-right",Globals.QUADRANT_CELL_BORDER_STYLE)
+            cellElement.style.setProperty("--cell-border-width-right",Globals.BOARD_BORDER_WIDTH)
         }
         if (this.#x == 2 || this.#x == 5){
             cellElement.style.setProperty("--cell-border-style-right",Globals.QUADRANT_CELL_BORDER_STYLE)
             cellElement.style.setProperty("--cell-border-width-right",Globals.QUADRANT_CELL_BORDER_WIDTH)
         }
+        if (this.#y == 0){
+            cellElement.style.setProperty("--cell-border-style-top",Globals.QUADRANT_CELL_BORDER_STYLE)
+            cellElement.style.setProperty("--cell-border-width-top",Globals.BOARD_BORDER_WIDTH)
+        }
         if (this.#y == 3 || this.#y == 6){
             cellElement.style.setProperty("--cell-border-style-top",Globals.QUADRANT_CELL_BORDER_STYLE)
             cellElement.style.setProperty("--cell-border-width-top",Globals.QUADRANT_CELL_BORDER_WIDTH)
         }
+        if (this.#x == 0){
+            cellElement.style.setProperty("--cell-border-style-left",Globals.QUADRANT_CELL_BORDER_STYLE)
+            cellElement.style.setProperty("--cell-border-width-left",Globals.BOARD_BORDER_WIDTH)
+        }  
         if (this.#x == 3 || this.#x == 6){
             cellElement.style.setProperty("--cell-border-style-left",Globals.QUADRANT_CELL_BORDER_STYLE)
             cellElement.style.setProperty("--cell-border-width-left",Globals.QUADRANT_CELL_BORDER_WIDTH)

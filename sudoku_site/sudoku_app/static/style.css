@@ -39,7 +39,7 @@ div.sudoku-game-wrapper{
     display: flex;
     flex-wrap: nowrap;
     justify-content: center;
-    align-items: top;
+    align-items: flex-start;
     /*height: 100vh;*/
     margin: 0;
     font-size: 7.5vmin;
@@ -62,6 +62,7 @@ div.right_controls{
 
 div.game-options-wrapper {
     background-color: darkgreen;
+    width: 100%;
     font-size: 2vmin;
     border-radius: 1vmin;
     margin-right: 1vmin;
@@ -90,8 +91,6 @@ div.game-board {
     display: grid;
     grid-template-columns: repeat(var(--grid-size), var(--cell-size));
     grid-template-rows: repeat(var(--grid-size), var(--cell-size));
-    background-color: #333333;/*Change this to something different if you want the border to be there, thickness below*/
-    padding: var(--board-border);/*The thickness of the border of the whole board*/
     position: relative;
 }
 
@@ -125,6 +124,16 @@ div.new-button-wrapper{
     vertical-align: top;
 }
 
+div.timer-wrapper {
+    width: 100%;
+    background-color: black;
+    color: yellowgreen;
+    text-align: center;
+    margin-bottom: 1vmin;
+    border-radius: 1vmin;
+
+
+}
 div.numpad-wrapper {
     display: grid;
     grid-template-columns: auto auto auto;
@@ -162,7 +171,7 @@ div.board-footer{
     padding: 1vmin;
 }
 
-button.submit_button {
+button.check_answers_button {
     border: none;
     color: white;
     padding: 1.5vmin 1.5vmin;
@@ -184,7 +193,6 @@ button.resume_play_button{
     display: var(--resume-play-visibility);
     background-color: rgb(148, 216, 216);
 }
-
 
 @keyframes show {
     0% {

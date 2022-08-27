@@ -21,6 +21,7 @@ var Globals = {
 
          NORMAL_CELL_BORDER_WIDTH: "0.1vmin",
          QUADRANT_CELL_BORDER_WIDTH: "0.4vmin",
+         BOARD_BORDER_WIDTH: "0.8vmin",/*Note this is double the quadrant*/
 
          CELL_BORDER_COLOR: "#333333",
          WRONG_ANSWER_BG_COLOUR: "#e57c4e",

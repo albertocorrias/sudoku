@@ -7,7 +7,6 @@ export default class Grid {
     constructor(gridElement) {
         gridElement.style.setProperty("--grid-size", Globals.GRID_SIZE)
         gridElement.style.setProperty("--cell-size", `${Globals.CELL_SIZE}vmin`)
-        gridElement.style.setProperty("--board-border", `${Globals.BOARD_BORDER_WIDTH}vmin`)
         
         /*Create the cells*/
         this.#cells = createCellElements(gridElement).map((cellElement, index) => {

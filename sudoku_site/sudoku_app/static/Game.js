@@ -123,7 +123,7 @@ export default class Game {
         }, true)
 
         //setup event listener for submit button
-        document.getElementById("submit_button").addEventListener("click", function(evt) {
+        document.getElementById("check_answers_button").addEventListener("click", function(evt) {
             grid.clearAllHighlighting()
             var cell_counter = 0
             var all_correct = true
@@ -152,6 +152,7 @@ export default class Game {
             grid.clearAllHighlighting()
             document.getElementById("resume_play_button").style.setProperty("--resume-play-visibility","none")
         }, true)
+
     }//constructor
 }//Game class
 
