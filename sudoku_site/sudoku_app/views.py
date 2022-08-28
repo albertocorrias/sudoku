@@ -28,7 +28,7 @@ def get_context(request, puzzle_id):
     - A game board object with the solution.
     - A form for further changes to the difficulty level. The form is initialized to the given difficulty level
     - An error code, in case the requested ID is not there or there are multiple ones (the latter should really never happen)
-    - The puzzle ID itself for use by the HTNL
+    - The puzzle ID itself for use by the HTML
     '''
     error_code = 0;
     puzzle_qs = Game.objects.filter(id=puzzle_id);
