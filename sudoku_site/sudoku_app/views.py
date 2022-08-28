@@ -24,10 +24,11 @@ def index(request):
 def get_context(request, puzzle_id):
     '''
     A helper method that, given a puzzle id, returns a dictionary with
-    - A game board object with hints. This is chosen randomly from the database
-    - A game board object with he solution.This is chosen randomly from the database
+    - A game board object with hints. 
+    - A game board object with the solution.
     - A form for further changes to the difficulty level. The form is initialized to the given difficulty level
-    - 
+    - An error code, in case the requested ID is not there or there are multiple ones (the latter should really never happen)
+    - The puzzle ID itself for use by the HTNL
     '''
     error_code = 0;
     puzzle_qs = Game.objects.filter(id=puzzle_id);
