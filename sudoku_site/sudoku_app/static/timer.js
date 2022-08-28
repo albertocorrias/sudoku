@@ -30,8 +30,11 @@ var x = setInterval(function() {
     seconds_first_digit = "0"
   }
 
-  // Display the result in the element with id "time-wrapper"
-  document.getElementById("timer-wrapper").innerHTML = hours_first_digit + hours + ":"
-  + minutes_first_digit + minutes + ":" + seconds_first_digit + seconds ;
+  // Display the result in the element with id "time-wrapper" (if present)
+  timer_el = document.getElementById("timer-wrapper")
+  if (timer_el != null){
+    timer_el.innerHTML = hours_first_digit + hours + ":"
+    + minutes_first_digit + minutes + ":" + seconds_first_digit + seconds ;
+  }
 
 }, 1000);

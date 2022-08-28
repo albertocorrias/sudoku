@@ -11,6 +11,8 @@ export default class Game {
 
         //hide the resume play
         document.getElementById("resume_play_button").style.setProperty("--resume-play-visibility","none")
+        //hide the overlay that appears fro timed session when user submits
+        document.getElementById("id_overlay_timed_results").style.setProperty("--overlay-timed-results-visibility", "none")
         
         //Put hints
         var cell_counter = 0
@@ -126,31 +128,56 @@ export default class Game {
         document.getElementById("check_answers_button").addEventListener("click", function(evt) {
             grid.clearAllHighlighting()
             var cell_counter = 0
+            var drop_down_type = document.getElementById("id_game_type")
+            var selected_value = drop_down_type.options[drop_down_type.selectedIndex].value
+            var timed = false
+            if (selected_value == "Timed") { timed = true}
+
             var all_correct = true
             for (let i=0; i < solution.length; i++){
                 for (let j=0; j < solution[i].length; j++){
                     if (all_cells[cell_counter].isHint == false) {//we do not bother hints...
                         if ( all_cells[cell_counter].value == solution[i][j] ){
-                            all_cells[cell_counter].cellElement.style.setProperty("--cell-background-colour",Globals.CORRECT_ANSWER_BG_COLOUR)
+                            if (timed == false){
+                                all_cells[cell_counter].cellElement.style.setProperty("--cell-background-colour",Globals.CORRECT_ANSWER_BG_COLOUR)
+                            }
                             
                         } else {
-                            all_cells[cell_counter].cellElement.style.setProperty("--cell-background-colour",Globals.WRONG_ANSWER_BG_COLOUR)
+                            if (timed == false) {
+                                all_cells[cell_counter].cellElement.style.setProperty("--cell-background-colour",Globals.WRONG_ANSWER_BG_COLOUR)
+                            }
                             all_correct = false
                         }
                     }
                     cell_counter = cell_counter + 1
                 }
             }
-            if (all_correct == true) {
-                alert("Well done! Your solution is correct!")
+            //If it is not a timed sesssion, then just either congratulate or allow play to resume after highlighting
+            if (timed == false) {
+                if (all_correct == true) {
+                    alert("Well done! Your solution is correct!")
+                }
+                document.getElementById("resume_play_button").style.setProperty("--resume-play-visibility","inline")
+            } else {
+                document.getElementById("id_overlay_timed_results").style.setProperty("--overlay-timed-results-visibility", "block")
+                if (all_correct == true) {
+                    document.getElementById("id_overlay_paragraph").innerHTML = "Well done! Your solution is correct"
+                } else {
+                    document.getElementById("id_overlay_paragraph").innerHTML = "Your answer is incorrect or incomplete"
+                }
             }
-            document.getElementById("resume_play_button").style.setProperty("--resume-play-visibility","inline")
         }, true)
 
         //setup event listener for resume play button
         document.getElementById("resume_play_button").addEventListener("click", function(evt) {
             grid.clearAllHighlighting()
             document.getElementById("resume_play_button").style.setProperty("--resume-play-visibility","none")
+        }, true)
+
+        //setup event listener for closing the overlay
+        document.getElementById("id_close_timed_results_overlay_button").addEventListener("click", function(evt){
+            //just hide the overlay
+            document.getElementById("id_overlay_timed_results").style.setProperty("--overlay-timed-results-visibility", "none")
         }, true)
 
     }//constructor
