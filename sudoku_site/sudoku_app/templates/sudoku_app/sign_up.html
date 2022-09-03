@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% load static %}
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-COmpatible" content="IE=Edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sudoku</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'login_style.css' %}">
+        <link rel="stylesheet" type="text/css" media="screen and (max-width: 600px)" href="{% static 'smallscreen.css' %}">    
+    </head>
+    <body>
+        <div id="header" class="header login_header">lisudoku.org | free online sudoku</div>
+        <div class="overall_container">
+            <h2>Sign up</h2>
+            <form method="post">
+              {% csrf_token %}
+              {{ sign_up_form.as_p }}
+              <button type="submit">Sign Up</button>
+            </form>
+        </div>
+    </body>
+</html>

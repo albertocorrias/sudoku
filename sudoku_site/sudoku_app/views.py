@@ -1,5 +1,7 @@
 import re
 from django.shortcuts import render
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login, authenticate
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -21,6 +23,25 @@ def index(request):
     request.session['game_type'] = GameSettingsForm.LEISURE #If user lands without any puzzle, start in leisure mode
     return HttpResponseRedirect(reverse('sudoku_app:new_specific_puzzle',  kwargs={'puzzle_id': sel_id}));
 
+def sign_up(request):
+    if request.method == 'POST':
+        sign_up_form = UserCreationForm(request.POST)
+        if sign_up_form.is_valid():
+            sign_up_form.save()
+            username = sign_up_form.cleaned_data.get('username')
+            raw_password = sign_up_form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return HttpResponseRedirect(reverse('sudoku_app:index'))
+    else:
+        sign_up_form = UserCreationForm()
+        
+
+    template = loader.get_template('sudoku_app/sign_up.html')
+    context = {
+        'sign_up_form' : sign_up_form
+    }
+    return HttpResponse(template.render(context, request))
 
 def get_context(request, puzzle_id):
     '''

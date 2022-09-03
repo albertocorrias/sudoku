@@ -10,13 +10,14 @@
     <title>lisudoku.org | free online sudoku</title>          
   </head>
   <body>
-  <div class="header">   
+  <div class="header login_header">   
       lisudoku.org | free online sudoku
   </div>
+
   <div class="overall_container">
       <h2>Log In</h2>
       <div class="form_container">
-        <form method="post">
+        <form method="post" class="login_form">
           {% csrf_token %}
           <table>
             <tr>

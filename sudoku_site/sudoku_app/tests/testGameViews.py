@@ -1,6 +1,8 @@
 import copy
 from django.test import TestCase
 from django.urls import reverse
+from django.contrib import auth
+from django.contrib.auth.models import User
 from decimal import *
 from sudoku_app.models import Game
 from sudoku_app.game_logic import CreateEmptyBoard, SolveBoard
@@ -143,5 +145,37 @@ class TestGameViews(TestCase):
         expected_url = '/' + str(medium_id)
         self.assertRedirects(response, expected_url, status_code=302,target_status_code=200)
         
+    def test_sign_up(self):
+        hint_brd = CreateExampleTestBoard()
+        saved_hints = copy.deepcopy(hint_brd)
+        solved = SolveBoard(hint_brd)
+        #Here, we create two (even if identical, but with different levels of difficulty)
+        Game.objects.create(hints_board = saved_hints, solved_board = hint_brd, difficulty=Game.EASY)
+        Game.objects.create(hints_board = saved_hints, solved_board = hint_brd, difficulty=Game.MEDIUM)
+        self.assertEqual(Game.objects.all().count(), 2)
+        easy_ID = Game.objects.filter(difficulty=Game.EASY).get().id
+    
+        #go to sign-up page, to test the GET
+        response = self.client.get(reverse('sudoku_app:sign_up'))
+        self.assertEqual(response.status_code, 200)#no issues
+        #No user at the start
+        self.assertEqual(User.objects.all().count(),0)
+        #Nobody authenticated
+        user = auth.get_user(self.client)
+        self.assertEqual(user.is_authenticated, False)
 
+        #add a user
+        user_name = 'test_user'
+        password = 'Hello12349865'
+        self.client.post(reverse('sudoku_app:sign_up'),{'username': user_name,'password1' : password, 'password2' : password})
+        self.assertEqual(User.objects.all().count(),1)
+        self.assertEqual(User.objects.filter(username=user_name).count(),1)
+        response = self.client.get(reverse('sudoku_app:new_specific_puzzle', kwargs={'puzzle_id': easy_ID}))
+        self.assertEqual(response.status_code, 200)#no issues
+        
+        #The view is coded up to autmatically authenticate the user, so we test that it is actually so (unlike before)
+        user = auth.get_user(self.client)
+        self.assertEqual(user.is_authenticated, True)
+        
+        
         
