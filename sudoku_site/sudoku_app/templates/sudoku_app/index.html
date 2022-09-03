@@ -24,7 +24,7 @@
             You are logged in as {{ user.get_username }}. 
             <a href="{% url 'logout'%}?next={{request.path}}">Click here to logout</a>
             {% else %}
-            You are not signed in, <a href="{% url 'login'%}?next={{request.path}}">login</a> or sign up
+            You are not signed in, <a href="{% url 'login'%}?next={{request.path}}">login</a> or <a href="{% url 'sudoku_app:sign_up' %}">sign up</a>
             {% endif %}
         </div>
 
