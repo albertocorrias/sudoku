@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from decimal import *
 from sudoku_app.models import Game
 from sudoku_app.game_logic import CreateEmptyBoard, SolveBoard
-from sudoku_app.forms import GameSettingsForm
+from sudoku_app.forms import GameSettingsForm,SignUpForm
 
 def CreateExampleTestBoard():
     tb = CreateEmptyBoard();
@@ -144,7 +144,17 @@ class TestGameViews(TestCase):
         self.assertEqual(response.status_code, 302)#should re-direct
         expected_url = '/' + str(medium_id)
         self.assertRedirects(response, expected_url, status_code=302,target_status_code=200)
+
+    def test_sign_up_form(self): 
+        empty_sign_up_form = SignUpForm();
+        self.assertEqual(empty_sign_up_form.is_valid(), False)
         
+        user_name = 'test_user'
+        password = 'Hello12349865'
+        email = 'myemail@me.com'
+        filled_form = SignUpForm(data={'username': user_name,'email' : email, 'password1' : password, 'password2' : password})
+        self.assertEqual(filled_form.is_valid(), True)
+
     def test_sign_up(self):
         hint_brd = CreateExampleTestBoard()
         saved_hints = copy.deepcopy(hint_brd)
@@ -167,7 +177,8 @@ class TestGameViews(TestCase):
         #add a user
         user_name = 'test_user'
         password = 'Hello12349865'
-        self.client.post(reverse('sudoku_app:sign_up'),{'username': user_name,'password1' : password, 'password2' : password})
+        email = 'myemail@me.com'
+        self.client.post(reverse('sudoku_app:sign_up'),{'username': user_name,'email' : email, 'password1' : password, 'password2' : password})
         self.assertEqual(User.objects.all().count(),1)
         self.assertEqual(User.objects.filter(username=user_name).count(),1)
         response = self.client.get(reverse('sudoku_app:new_specific_puzzle', kwargs={'puzzle_id': easy_ID}))
@@ -176,6 +187,17 @@ class TestGameViews(TestCase):
         #The view is coded up to autmatically authenticate the user, so we test that it is actually so (unlike before)
         user = auth.get_user(self.client)
         self.assertEqual(user.is_authenticated, True)
+
+        #Try adding a user wth the same user name, but different email
+        email_new = 'youremail@you.com'
+        self.client.post(reverse('sudoku_app:sign_up'),{'username': user_name,'email' : email_new, 'password1' : password, 'password2' : password})
+        #Should still be 1
+        self.assertEqual(User.objects.all().count(),1)
+        self.assertEqual(User.objects.filter(username=user_name).count(),1)
         
-        
-        
+        #Try adding a user wth the same email, but different username
+        uesr_new = 'another_user'
+        self.client.post(reverse('sudoku_app:sign_up'),{'username': uesr_new,'email' : email, 'password1' : password, 'password2' : password})
+        #Should still be 1
+        self.assertEqual(User.objects.all().count(),1)
+        self.assertEqual(User.objects.filter(username=user_name).count(),1)

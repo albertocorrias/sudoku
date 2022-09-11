@@ -3,17 +3,51 @@ div.login_header{
     padding-top: 0;
 }
 
-div.overall_container{
+div.login_overall_container{
     width: 50%;
     margin: auto;
     text-align: left;
+    border-width: 0.2vmin;
+    border-radius: 1vmin;
+    border-color: var(--header-text);
+    border-style: solid;
 }
 
-div.form_container{
+
+p.sign-up-title{
     text-align: center;
-    width: 100%;
-    margin: auto;
+    color: var(--header-text);
+    font-size: 2vmin;
+    font-weight: bold;
 }
+div.form-container{
+    text-align: left;
+    width: 100%;
+    margin: 1vmin;
+    font-size: 2vmin;
+}
+
+div.button-container{
+    text-align: center;
+    border-top: solid;
+    border-top-width: 0.2vmin;
+    border-top-style: solid;
+    border-top-color: var(--header-text);
+    margin-left: 2vmin;
+    margin-right: 2vmin;
+}
+
+
+/*Note that the ul and li are needed as Django puts a random ul list 
+under the password, NOT as a help-text, and we want to style it like the help-text*/
+p.help-text,
+div.form-container ul,
+div.form-container li
+{
+    color: grey;
+    font-size: 1.5vmin;
+}
+
 
 form.login_form{
     display:inline-block;

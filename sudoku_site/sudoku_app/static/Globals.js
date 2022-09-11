@@ -4,7 +4,7 @@ var Globals = {
          CELL_SIZE: 8,
          BOARD_BORDER_WIDTH: 0.9,
 
-         NUMBER_COLOR_OF_HINTS: "#68823d", /*this is a very dark green*/
+         NUMBER_COLOR_OF_HINTS: "rgb(46, 97, 71)", /*this is a very dark green*/
          NUMBER_COLOR_OF_USER_NUMBERS: "#00000", /*Black*/
          NUMBER_COLOR_OF_PROVISIONAL_NUMBERS: "#866c22",/*This is the color when the user puts more than 
                                                          one number on the cell. It's a dark yellow*/

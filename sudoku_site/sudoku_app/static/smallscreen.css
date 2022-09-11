@@ -37,3 +37,7 @@ div.numpad-item{
     font-size: 5.5vmin;
     padding: 1vmin;
 }
+
+div.login_overall_container{
+    width: 95%;
+}

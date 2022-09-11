@@ -6,15 +6,20 @@
         <meta http-equiv="X-UA-COmpatible" content="IE=Edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Sudoku</title>
-        <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">  
-        <script src="{% static   'script.js' %}" type="module"></script>    
+        <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'login_style.css' %}">
+        <link rel="stylesheet" type="text/css" media="screen and (max-width: 600px)" href="{% static 'smallscreen.css' %}">    
     </head>
     <body>
-        <div id="header" class="header">Free online sudoku</div>
-        <div style="text-align: center;"><p>An error was encountered. The requested puzzle number {{ puzzle_id }} does not exist. </p>
-            <button type="button" class="submit_button" id="return_main_page_button" onclick="location.href = {% url 'sudoku_app:index' %};">Return to main page</button>
+        <div id="header" class="header login_header">lisudoku.org | free online sudoku</div>
+        <div class="login_overall_container">
+            <p class="sign-up-title">Errors have been encountered</p>
+                    <p>{{ errors }}</p>
+                    <div class="button-container">
+                        <button type="submit" class="check_answers_button" onclick="document.location= {{ target_redir_url }} ">Back to home page</button>
+                    </div>
 
+            </div>
         </div>
-        
     </body>
 </html>

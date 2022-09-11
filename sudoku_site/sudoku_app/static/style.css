@@ -15,37 +15,46 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
+:root {
+    --body-background: #faf0e6;
+    --header-background: #faf0e6;
+    --header-text: rgb(12, 82, 144);
+    --buttons-background: rgb(46, 97, 71);
+}
 
 body {
     padding: 0;
     margin: 0;
-    background-color: rgb(162, 162, 165);
+    background-color: var(--body-background);
 }
 
 div.header {
-    background-color: rgb(13, 13, 80);
+    background-color: var(--header-background);
     display: block;
     width: 100%;
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 4vmin;
-    color: antiquewhite;
+    color: var(--header-text);
     height: 9vh;
     margin: auto;
     line-height: 9vh;
     padding-top: 1.5vmin;
 }
 div.user_bar {
-    background-color: rgb(13, 13, 80);;
+    background-color: var(--header-background);;
     margin: 0;
     text-align: right;
-    color: antiquewhite;
+    color: var(--header-text);
     width: 100%;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 2vmin;
     padding-right: 1.5vmin;
     padding-top: 0.5vmin;
     padding-bottom: 0.5vmin;
+    border-bottom: solid;
+    border-bottom-color: #333333;
+    border-bottom-width: 0.2vmin;
 }
 div.sudoku-game-wrapper{
     display: flex;
@@ -55,7 +64,7 @@ div.sudoku-game-wrapper{
     /*height: 100vh;*/
     margin: 0;
     font-size: 7.5vmin;
-    padding-top: 1vmin;
+    padding-top: 3vmin;
 }
 
 div.board-wrapper {
@@ -73,19 +82,19 @@ div.right_controls{
 
 
 div.game-options-wrapper {
-    background-color: darkgreen;
+    background-color: var(--buttons-background);
     width: 100%;
     font-size: 2vmin;
     border-radius: 1vmin;
     margin-right: 1vmin;
     padding: 1vmin;
-    color: antiquewhite;
+    color: var(--header-background);
     display:block;
 }
 
 div.game-options-wrapper select {
     /* A reset of styles, including removing the default dropdown arrow*/
-    background-color: rgb(13, 13, 80);
+    background-color: var(--header-text);
     border: none;
     width: 60%;
     font-family: inherit;
@@ -157,8 +166,8 @@ div.numpad-wrapper {
 }
 div.numpad-item{
     text-align: center;
-    background-color: rgb(13, 13, 80);
-    color: antiquewhite;
+    background-color: var(--header-text);
+    color: var(--header-background);
     border: 0;
     border-radius: 6px;
     font-size: 7.5vmin;
@@ -193,7 +202,7 @@ button.check_answers_button {
     font-size: 3vmin;
     margin: 1vmin 1vmin;
     cursor: pointer;
-    background-color: darkgreen;
+    background-color: var(--buttons-background);
     border-radius: 6px;
   }
 

@@ -12,13 +12,21 @@
     </head>
     <body>
         <div id="header" class="header login_header">lisudoku.org | free online sudoku</div>
-        <div class="overall_container">
-            <h2>Sign up</h2>
-            <form method="post">
-              {% csrf_token %}
-              {{ sign_up_form.as_p }}
-              <button type="submit">Sign Up</button>
-            </form>
+        <div class="login_overall_container">
+            <p class="sign-up-title">Sign up. It's free!</p>
+            <div class="form-container">
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in sign_up_form %}
+                        <p>{{ field.label_tag }} {{ field }}</p>
+                        <p class="help-text"> {{ field.help_text }} </p>
+                        
+                    {% endfor %}
+                    <div class="button-container">
+                        <button type="submit" class="check_answers_button">Sign up</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </body>
 </html>

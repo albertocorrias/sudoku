@@ -158,17 +158,20 @@ export default class Game {
                     alert("Well done! Your solution is correct!")
                 }
                 document.getElementById("resume_play_button").style.setProperty("--resume-play-visibility","inline")
-            } else {
+            } else {//this is a timed session
                 document.getElementById("id_overlay_timed_results").style.setProperty("--overlay-timed-results-visibility", "block")
                 if (all_correct == true) {
                     document.getElementById("id_overlay_paragraph").innerHTML = "Well done! Your solution is correct"
+                    ///\TODO send to server for storing
+                    
                 } else {
                     document.getElementById("id_overlay_paragraph").innerHTML = "Your answer is incorrect or incomplete"
+                    ///\TODO Count number of wrong times
                 }
             }
         }, true)
 
-        //setup event listener for resume play button
+        //setup event listener for resume play button (for leisure plays)
         document.getElementById("resume_play_button").addEventListener("click", function(evt) {
             grid.clearAllHighlighting()
             document.getElementById("resume_play_button").style.setProperty("--resume-play-visibility","none")

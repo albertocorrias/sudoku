@@ -1,38 +1,33 @@
+
 <!DOCTYPE html>
-<html>
-{% load static %}
-
-  <head>
-    <meta charset="utf-8">
-    
-    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'login_style.css' %}">
-    <title>lisudoku.org | free online sudoku</title>          
-  </head>
-  <body>
-  <div class="header login_header">   
-      lisudoku.org | free online sudoku
-  </div>
-
-  <div class="overall_container">
-      <h2>Log In</h2>
-      <div class="form_container">
-        <form method="post" class="login_form">
-          {% csrf_token %}
-          <table>
-            <tr>
-              <td>{{ form.username.label_tag }}</td>
-              <td>{{ form.username }}</td>
-            </tr>
-            <tr>
-              <td>{{ form.password.label_tag }}</td>
-              <td>{{ form.password }}</td>
-            </tr>
-          </table>
-          <button type="submit">Log In</button>
-        </form>
-      </div>
-      <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
-  </div>
-  </body>
+<html lang="en">
+    <head>
+        {% load static %}
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-COmpatible" content="IE=Edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sudoku</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'login_style.css' %}">
+        <link rel="stylesheet" type="text/css" media="screen and (max-width: 600px)" href="{% static 'smallscreen.css' %}">    
+    </head>
+    <body>
+        <div id="header" class="header login_header">lisudoku.org | free online sudoku</div>
+        <div class="login_overall_container">
+            <p class="sign-up-title">Login</p>
+            <div class="form-container">
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <p>{{ field.label_tag }} {{ field }}</p>
+                        <p class="help-text"> {{ field.help_text }} </p>
+                        
+                    {% endfor %}
+                    <div class="button-container">
+                        <button type="submit" class="check_answers_button">Log in</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
 </html>

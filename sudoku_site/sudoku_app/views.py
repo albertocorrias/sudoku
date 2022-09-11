@@ -10,7 +10,7 @@ from .models import Game
 from .db_generation import GenerateDatabase
 import random
 
-from sudoku_app.forms import GameSettingsForm
+from sudoku_app.forms import GameSettingsForm,SignUpForm
 
 def index(request):
     
@@ -25,7 +25,7 @@ def index(request):
 
 def sign_up(request):
     if request.method == 'POST':
-        sign_up_form = UserCreationForm(request.POST)
+        sign_up_form = SignUpForm(request.POST)
         if sign_up_form.is_valid():
             sign_up_form.save()
             username = sign_up_form.cleaned_data.get('username')
@@ -33,8 +33,18 @@ def sign_up(request):
             user = authenticate(username=username, password=raw_password)
             login(request, user)
             return HttpResponseRedirect(reverse('sudoku_app:index'))
+        else:
+            game_objects = Game.objects.filter(difficulty = Game.EASY)
+            sel_idx = random.randint(0,game_objects.count()-1)
+            sel_id = game_objects[sel_idx].id
+            template = loader.get_template('sudoku_app/error_page.html')
+            context = {
+                'errors': sign_up_form.errors,
+                'target_redir_url' : str(sel_id)
+            }
+            return HttpResponse(template.render(context, request))  
     else:
-        sign_up_form = UserCreationForm()
+        sign_up_form = SignUpForm()
         
 
     template = loader.get_template('sudoku_app/sign_up.html')
@@ -85,9 +95,18 @@ def new_specific_puzzle(request,puzzle_id):
     context = get_context(request, puzzle_id)
     if (context["error_code"] == 0):
         template = loader.get_template('sudoku_app/index.html')
+        return HttpResponse(template.render(context, request))
     else:
+        game_objects = Game.objects.filter(difficulty = Game.EASY)
+        sel_idx = random.randint(0,game_objects.count()-1)
+        sel_id = game_objects[sel_idx].id
         template = loader.get_template('sudoku_app/error_page.html')
-    return HttpResponse(template.render(context, request))
+        context = {
+            'errors': 'An error was encountered. The requested puzzle numbe ' + str(puzzle_id) + ' does not exist.',
+            'target_redir_url' : str(sel_id)
+        }
+        return HttpResponse(template.render(context, request))  
+    
 
 def new_puzzle_from_diff_level_change(request):
     '''
