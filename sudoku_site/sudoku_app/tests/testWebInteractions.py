@@ -63,10 +63,8 @@ class TestWebInteractions(LiveServerTestCase):
         saved_hints = copy.deepcopy(hint_brd)
         slv = SolveBoard(hint_brd)#hint_brd becomes solved. Note slv is just a flag
         Game.objects.create(hints_board = saved_hints, solved_board = hint_brd, difficulty=Game.EASY)
-
-        driver.get('http://127.0.0.1:8000/')
-        
         self.assertEqual(Game.objects.all().count(), 1)
+        driver.get('http://127.0.0.1:8000/')
         
         driver.quit()
         
