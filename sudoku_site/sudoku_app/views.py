@@ -1,4 +1,5 @@
 import re
+import datetime
 from django.shortcuts import render
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, authenticate
@@ -138,3 +139,34 @@ def new_puzzle(request):
         sel_id = game_objects[sel_idx].id
 
     return HttpResponseRedirect(reverse('sudoku_app:new_specific_puzzle',  kwargs={'puzzle_id': sel_id})); 
+
+def user_page(request,user_id):
+    user = User.objects.filter(id = user_id)
+    user_count = user.count()
+    if (user_count==1):#one user. We are good
+        template = loader.get_template('sudoku_app/user_page.html')
+        context = {
+                'name': user.get().username 
+        }
+    else:#either no user or, for whatever reason more than one..
+        template = loader.get_template('sudoku_app/error_page.html')
+        context = {
+            'errors': 'An error was encountered. Selected user ID appears not to exist',
+        }
+    return HttpResponse(template.render(context, request))
+
+def record_successful_puzzle(request):
+    if (request.method == 'POST'):
+        user_id = request.POST["uesr_ID"]
+        puzzle_ID = request.POST["puzzle_ID"]
+        time_started = request.POST["time_started"]
+        time_finished = request.POST["time_finished"]
+
+        user_query = User.objects.filter(id = user_id)
+        if (user_query.count()==1):
+            user = user_query.get()
+        puzzle_query = Game.objects.filter(id = puzzle_ID)
+        if (puzzle_query.count()==1):
+            puzzle = puzzle_query.get()
+
+

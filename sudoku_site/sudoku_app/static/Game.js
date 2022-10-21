@@ -163,6 +163,7 @@ export default class Game {
                 if (all_correct == true) {
                     document.getElementById("id_overlay_paragraph").innerHTML = "Well done! Your solution is correct"
                     ///\TODO send to server for storing
+                    console.log("********************* HELLO")
                     
                 } else {
                     document.getElementById("id_overlay_paragraph").innerHTML = "Your answer is incorrect or incomplete"
