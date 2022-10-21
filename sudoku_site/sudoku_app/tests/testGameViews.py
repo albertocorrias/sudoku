@@ -1,10 +1,11 @@
 import copy
+from datetime import datetime, timedelta, timezone
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib import auth
 from django.contrib.auth.models import User
 from decimal import *
-from sudoku_app.models import Game
+from sudoku_app.models import Game,SolvedGame
 from sudoku_app.game_logic import CreateEmptyBoard, SolveBoard
 from sudoku_app.forms import GameSettingsForm,SignUpForm
 
@@ -201,3 +202,40 @@ class TestGameViews(TestCase):
         #Should still be 1
         self.assertEqual(User.objects.all().count(),1)
         self.assertEqual(User.objects.filter(username=user_name).count(),1)
+
+    def test_store_good_result(self):
+        hint_brd = CreateExampleTestBoard()
+        saved_hints = copy.deepcopy(hint_brd)
+        solved = SolveBoard(hint_brd)
+        #Here, we create two (even if identical, but with different levels of difficulty)
+        Game.objects.create(hints_board = saved_hints, solved_board = hint_brd, difficulty=Game.EASY)
+        Game.objects.create(hints_board = saved_hints, solved_board = hint_brd, difficulty=Game.MEDIUM)
+        self.assertEqual(Game.objects.all().count(), 2)
+        easy_ID = Game.objects.filter(difficulty=Game.EASY).get().id
+        #add a user
+        user_name = 'test_user'
+        password = 'Hello12349865'
+        email = 'myemail@me.com'
+        self.client.post(reverse('sudoku_app:sign_up'),{'username': user_name,'email' : email, 'password1' : password, 'password2' : password})
+        self.assertEqual(User.objects.all().count(),1)
+        self.assertEqual(User.objects.filter(username=user_name).count(),1)
+        response = self.client.get(reverse('sudoku_app:new_specific_puzzle', kwargs={'puzzle_id': easy_ID}))
+        self.assertEqual(response.status_code, 200)#no issues
+        
+        #The view is coded up to autmatically authenticate the user, so we test that it is actually so (unlike before)
+        user = auth.get_user(self.client)
+        self.assertEqual(user.is_authenticated, True)
+        #No solved game to start with
+        self.assertEqual(SolvedGame.objects.all().count(),0)
+        puzzle_start = datetime.now(timezone.utc)
+        puzzle_end  = puzzle_start + timedelta(hours=1, minutes=2, seconds=4)
+
+        #Test the post to store a successful game for the user
+        response = self.client.post(reverse('sudoku_app:record_successful_puzzle'), {'puzzle_ID' : easy_ID, 'time_started' : puzzle_start, 'time_finished'  :puzzle_end})
+
+        #Now should be 1
+        self.assertEqual(SolvedGame.objects.all().count(),1)
+        
+        #Check re-direction
+        expected_url = '/user/' + str(User.objects.filter(username=user_name).get().id) + '/'
+        self.assertRedirects(response, expected_url, status_code=302,target_status_code=200)

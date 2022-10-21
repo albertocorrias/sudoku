@@ -163,7 +163,17 @@ export default class Game {
                 if (all_correct == true) {
                     document.getElementById("id_overlay_paragraph").innerHTML = "Well done! Your solution is correct"
                     ///\TODO send to server for storing
-                    console.log("********************* HELLO")
+                    /*fetch('request/', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': csrftoken,
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: {
+                             '': song_id,
+                            'Answer': answer
+                        ,},
+                    });*/
                     
                 } else {
                     document.getElementById("id_overlay_paragraph").innerHTML = "Your answer is incorrect or incomplete"

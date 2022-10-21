@@ -7,7 +7,7 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.template import loader
-from .models import Game
+from .models import Game,SolvedGame
 from .db_generation import GenerateDatabase
 import random
 
@@ -156,17 +156,29 @@ def user_page(request,user_id):
     return HttpResponse(template.render(context, request))
 
 def record_successful_puzzle(request):
+    user_id=-1
+    if request.user.is_authenticated:
+        user_id = request.user.id
+
     if (request.method == 'POST'):
-        user_id = request.POST["uesr_ID"]
         puzzle_ID = request.POST["puzzle_ID"]
         time_started = request.POST["time_started"]
         time_finished = request.POST["time_finished"]
-
         user_query = User.objects.filter(id = user_id)
         if (user_query.count()==1):
             user = user_query.get()
         puzzle_query = Game.objects.filter(id = puzzle_ID)
         if (puzzle_query.count()==1):
             puzzle = puzzle_query.get()
+        
+        SolvedGame.objects.create(game = puzzle, user = user, time_started = time_started, time_solved = time_finished)
 
+    if (user_id>0):
+        return HttpResponseRedirect(reverse('sudoku_app:user_page', kwargs={'user_id' : user_id}));
+    else:
+        template = loader.get_template('sudoku_app/error_page.html')
+        context = {
+            'errors': 'An error was encountered. Use id not found',
+        }
+        return HttpResponse(template.render(context, request))
 
