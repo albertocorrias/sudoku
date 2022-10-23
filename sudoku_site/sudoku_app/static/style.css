@@ -19,7 +19,7 @@ input[type=number] {
     --body-background: #faf0e6;
     --header-background: #faf0e6;
     --header-text: rgb(12, 82, 144);
-    --buttons-background: rgb(46, 97, 71);
+    --buttons-background: rgb(94, 137, 114);
 }
 
 body {
@@ -127,11 +127,10 @@ div.cell {
     border-top-style: var(--cell-border-style-top);
     border-color: #333333;
     font-weight: normal;
-    justify-content: center;
-    align-items: center;
     text-align: center;
     color: var(--number-color);
     font-size: var(--text-size);
+    
 }
 
 div.right-controls{
