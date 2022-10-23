@@ -27,7 +27,7 @@
 
     </head>
     <body>
-        <div id="header" class="header">lisudoku.org | free online sudoku</div>
+        <div id="header" class="header"><a class="header" href="{% url 'sudoku_app:index' %}">lisudoku.org | free online sudoku</a></div>
         
         <div id="user_bar" class="user_bar">
             {% if user.is_authenticated %}

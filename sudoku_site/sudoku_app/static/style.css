@@ -28,7 +28,7 @@ body {
     background-color: var(--body-background);
 }
 
-div.header {
+div.header{
     background-color: var(--header-background);
     display: block;
     width: 100%;
@@ -40,7 +40,13 @@ div.header {
     margin: auto;
     line-height: 9vh;
     padding-top: 1.5vmin;
+    
 }
+a.header:visited, a.header:active, a.header:link {
+    text-decoration: none;
+    color: inherit;
+}
+
 div.user_bar {
     background-color: var(--header-background);;
     margin: 0;

@@ -11,7 +11,7 @@
         <link rel="stylesheet" type="text/css" media="screen and (max-width: 600px)" href="{% static 'smallscreen.css' %}">    
     </head>
     <body>
-        <div id="header" class="header login_header">lisudoku.org | free online sudoku</div>
+        <div id="header" class="header"><a class="header" href="{% url 'sudoku_app:index' %}">lisudoku.org | free online sudoku</a></div>
         <div class="login_overall_container">
             <p class="sign-up-title">Sign up. It's free!</p>
             <div class="form-container">

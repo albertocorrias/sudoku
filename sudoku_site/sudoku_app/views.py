@@ -154,12 +154,13 @@ def user_page(request,user_id):
     user_count = user.count()
     if (user_count==1):#one user. We are good
         solved_puzzles = []
-        for pzl_solved in SolvedGame.objects.filter(user__id = user_id):
+        for pzl_solved in SolvedGame.objects.filter(user__id = user_id).order_by(('-time_started')):
             
             solution_details = {
                 'puzzle_id' : pzl_solved.game.id,
                 'start_time' : pzl_solved.time_started,
-                'duration' : pzl_solved.time_solved - pzl_solved.time_started
+                'duration' : pzl_solved.time_solved - pzl_solved.time_started,
+                'difficulty' : pzl_solved.game.difficulty
             }
             solved_puzzles.append(solution_details)
         
