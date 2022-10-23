@@ -180,6 +180,7 @@ export default class Game {
             //If it is not a timed sesssion, then just either congratulate or allow play to resume after highlighting
             if (timed == false) {
                 if (all_correct == true) {
+                    document.getElementById("id_overlay_timed_results").style.setProperty("--overlay-timed-results-visibility", "block")
                     document.getElementById("id_overlay_paragraph").innerHTML = "Well done! Your solution is correct"
                 }
                 document.getElementById("resume_play_button").style.setProperty("--resume-play-visibility","inline")

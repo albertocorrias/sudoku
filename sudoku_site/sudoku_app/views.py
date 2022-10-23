@@ -77,6 +77,10 @@ def get_context(request, puzzle_id):
     if (puzzle_qs.count() == 0):error_code = 1
     if (puzzle_qs.count() >1): error_code = 1
 
+    user_id=-1
+    if request.user.is_authenticated:
+        user_id = request.user.id
+
     if (error_code ==0):
         puzzle = puzzle_qs.get() #the actual object
         difficulty_level = puzzle.difficulty
@@ -87,7 +91,8 @@ def get_context(request, puzzle_id):
             'puzzle_solution': puzzle.solved_board,
             'game_settings_form' : game_settings_form,
             'error_code' : error_code,
-            'puzzle_id' : puzzle_id
+            'puzzle_id' : puzzle_id,
+            'user_id' : user_id
         }
     else:
         ret = {
@@ -95,7 +100,8 @@ def get_context(request, puzzle_id):
             'puzzle_solution': None,
             'diff_level_form' : None,
             'error_code' : error_code,
-            'puzzle_id' : puzzle_id
+            'puzzle_id' : puzzle_id,
+            'user_id' : user_id
         }
 
     return ret
