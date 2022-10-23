@@ -1,5 +1,6 @@
 import re
 import datetime
+import json
 from django.shortcuts import render
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, authenticate
@@ -9,6 +10,7 @@ from django.urls import reverse
 from django.template import loader
 from .models import Game,SolvedGame
 from .db_generation import GenerateDatabase
+from .game_logic import GetOneAlreadySolvedPuzzle
 import random
 
 from sudoku_app.forms import GameSettingsForm,SignUpForm
@@ -17,6 +19,13 @@ def index(request):
     
     if (Game.objects.all().count()==0):
         GenerateDatabase(1,1,0,0,11814);#If db is empty, generate one easy and one medium
+
+    #solved_puzzle = GetOneAlreadySolvedPuzzle()
+    #hint_board = solved_puzzle["board_with_hints"]
+    #sol_board = solved_puzzle["solved_board"]
+    #alreday_solved_game = Game.objects.create(hints_board = hint_board, solved_board = sol_board, difficulty=Game.EASY)
+    #print(alreday_solved_game.id)
+
 
     game_objects = Game.objects.filter(difficulty = Game.EASY)
     sel_idx = random.randint(0,game_objects.count()-1)
@@ -103,7 +112,7 @@ def new_specific_puzzle(request,puzzle_id):
         sel_id = game_objects[sel_idx].id
         template = loader.get_template('sudoku_app/error_page.html')
         context = {
-            'errors': 'An error was encountered. The requested puzzle numbe ' + str(puzzle_id) + ' does not exist.',
+            'errors': 'An error was encountered. The requested puzzle number ' + str(puzzle_id) + ' does not exist.',
             'target_redir_url' : str(sel_id)
         }
         return HttpResponse(template.render(context, request))  
@@ -144,9 +153,20 @@ def user_page(request,user_id):
     user = User.objects.filter(id = user_id)
     user_count = user.count()
     if (user_count==1):#one user. We are good
+        solved_puzzles = []
+        for pzl_solved in SolvedGame.objects.filter(user__id = user_id):
+            
+            solution_details = {
+                'puzzle_id' : pzl_solved.game.id,
+                'start_time' : pzl_solved.time_started,
+                'duration' : pzl_solved.time_solved - pzl_solved.time_started
+            }
+            solved_puzzles.append(solution_details)
+        
         template = loader.get_template('sudoku_app/user_page.html')
         context = {
-                'name': user.get().username 
+                'name': user.get().username,
+                'solved_puzzles' : solved_puzzles
         }
     else:#either no user or, for whatever reason more than one..
         template = loader.get_template('sudoku_app/error_page.html')
@@ -156,14 +176,34 @@ def user_page(request,user_id):
     return HttpResponse(template.render(context, request))
 
 def record_successful_puzzle(request):
+
     user_id=-1
     if request.user.is_authenticated:
         user_id = request.user.id
 
     if (request.method == 'POST'):
-        puzzle_ID = request.POST["puzzle_ID"]
-        time_started = request.POST["time_started"]
-        time_finished = request.POST["time_finished"]
+
+        data = json.loads(request.body)
+        
+        puzzle_ID = data["puzzle_ID"]
+        start_year = data["start_year"]
+        start_month = data["start_month"]
+        start_day = data["start_day"]
+        start_hour = data["start_hour"]
+        start_minute = data["start_minute"]
+        start_seconds = data["start_seconds"]
+        
+        end_year = data["end_year"]
+        end_month = data["end_month"]
+        end_day = data["end_day"]
+        end_hour = data["end_hour"]
+        end_minute = data["end_minute"]
+        end_seconds = data["end_seconds"]
+        zone_name = data["zone_name"]
+
+        start_of_puzzle = datetime.datetime(year=start_year, month=start_month, day=start_day, hour=start_hour, minute=start_minute, second = start_seconds)
+        end_of_puzzle = datetime.datetime(year=end_year, month=end_month, day=end_day, hour=end_hour, minute=end_minute, second = end_seconds)
+
         user_query = User.objects.filter(id = user_id)
         if (user_query.count()==1):
             user = user_query.get()
@@ -171,14 +211,14 @@ def record_successful_puzzle(request):
         if (puzzle_query.count()==1):
             puzzle = puzzle_query.get()
         
-        SolvedGame.objects.create(game = puzzle, user = user, time_started = time_started, time_solved = time_finished)
+        SolvedGame.objects.create(game = puzzle, user = user, time_started = start_of_puzzle, time_solved = end_of_puzzle)
 
     if (user_id>0):
         return HttpResponseRedirect(reverse('sudoku_app:user_page', kwargs={'user_id' : user_id}));
     else:
         template = loader.get_template('sudoku_app/error_page.html')
         context = {
-            'errors': 'An error was encountered. Use id not found',
+            'errors': 'An error was encountered. User id not found',
         }
         return HttpResponse(template.render(context, request))
 

@@ -14,6 +14,10 @@
         <div id="header" class="header login_header">lisudoku.org | free online sudoku</div>
         <div class="login_overall_container">
             <p> User: {{ name }} </p>
+            <p>Puzzle solved:</p>
+            {% for entry in solved_puzzles %}
+            <p>{{ entry.puzzle_id }}, {{ entry.start_time }}, Duration : {{ entry.duration }} </p>
+            {% endfor %}
             
         </div>
     </body>

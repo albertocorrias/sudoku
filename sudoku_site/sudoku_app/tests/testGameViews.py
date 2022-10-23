@@ -1,4 +1,5 @@
 import copy
+import json
 from datetime import datetime, timedelta, timezone
 from django.test import TestCase
 from django.urls import reverse
@@ -231,7 +232,21 @@ class TestGameViews(TestCase):
         puzzle_end  = puzzle_start + timedelta(hours=1, minutes=2, seconds=4)
 
         #Test the post to store a successful game for the user
-        response = self.client.post(reverse('sudoku_app:record_successful_puzzle'), {'puzzle_ID' : easy_ID, 'time_started' : puzzle_start, 'time_finished'  :puzzle_end})
+        response = self.client.post(reverse('sudoku_app:record_successful_puzzle'), json.dumps({'puzzle_ID' : easy_ID,
+                                                                                    'start_year' : puzzle_start.year,
+                                                                                    'start_month' : puzzle_start.month,
+                                                                                    'start_day' : puzzle_start.day,
+                                                                                    'start_hour' : puzzle_start.hour,
+                                                                                    'start_minute' : puzzle_start.minute,
+                                                                                    'start_seconds' : puzzle_start.second,
+                                                                                    'end_year' : puzzle_end.year,
+                                                                                    'end_month' : puzzle_end.month,
+                                                                                    'end_day' : puzzle_end.day,
+                                                                                    'end_hour' : puzzle_end.hour,
+                                                                                    'end_minute' : puzzle_end.minute,
+                                                                                    'end_seconds' : puzzle_end.second,
+                                                                                    'zone_name' : 'test'}),\
+                                                                                    content_type="application/json")
 
         #Now should be 1
         self.assertEqual(SolvedGame.objects.all().count(),1)

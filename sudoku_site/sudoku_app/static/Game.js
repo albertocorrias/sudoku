@@ -1,5 +1,28 @@
 import Grid from "./Grid.js"
 
+/**
+ * This function was pinched from https://stackoverflow.com/questions/62791985/django-sending-post-request-from-javascript
+ * It is present online in various other places as well. It is based on the fact that the document contains all the
+ * information on the cookies. Here, we will use it by passing "csrftoken", which is used by django
+ * @param  name the name of the cookie
+ * @returns the value of the vcookie
+ */
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 export default class Game {
 
     constructor(hints,solution) {
@@ -8,7 +31,8 @@ export default class Game {
 
         const cells_collection = document.getElementsByClassName("cell");
         var all_cells = grid.cells;
-
+        var start_time_of_puzzle = luxon.DateTime.now()//record start time
+        
         //hide the resume play
         document.getElementById("resume_play_button").style.setProperty("--resume-play-visibility","none")
         //hide the overlay that appears fro timed session when user submits
@@ -126,13 +150,14 @@ export default class Game {
 
         //setup event listener for submit button
         document.getElementById("check_answers_button").addEventListener("click", function(evt) {
+            
             grid.clearAllHighlighting()
             var cell_counter = 0
             var drop_down_type = document.getElementById("id_game_type")
             var selected_value = drop_down_type.options[drop_down_type.selectedIndex].value
             var timed = false
             if (selected_value == "Timed") { timed = true}
-
+            
             var all_correct = true
             for (let i=0; i < solution.length; i++){
                 for (let j=0; j < solution[i].length; j++){
@@ -155,25 +180,54 @@ export default class Game {
             //If it is not a timed sesssion, then just either congratulate or allow play to resume after highlighting
             if (timed == false) {
                 if (all_correct == true) {
-                    alert("Well done! Your solution is correct!")
+                    document.getElementById("id_overlay_paragraph").innerHTML = "Well done! Your solution is correct"
                 }
                 document.getElementById("resume_play_button").style.setProperty("--resume-play-visibility","inline")
             } else {//this is a timed session
+                
                 document.getElementById("id_overlay_timed_results").style.setProperty("--overlay-timed-results-visibility", "block")
                 if (all_correct == true) {
-                    document.getElementById("id_overlay_paragraph").innerHTML = "Well done! Your solution is correct"
-                    ///\TODO send to server for storing
-                    /*fetch('request/', {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRFToken': csrftoken,
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: {
-                             '': song_id,
-                            'Answer': answer
-                        ,},
-                    });*/
+                    var end = luxon.DateTime.now() //record end time
+
+                    
+                    if (user_is_logged_in == "true"){//if the user is logged in and got it right, we post to the server for storing
+                        document.getElementById("id_overlay_paragraph").innerHTML = "Well done! Your solution is correct. Your successful attempt is recorded"
+                        var current_url = window.location.href
+                        //split the URL
+                        var arrays_url = current_url.split("/")
+                        //PuzzleID should be the last
+                        var puzzle_id = arrays_url[arrays_url.length - 1]
+                        
+                        var url_to_fetch = current_url.replace(puzzle_id, 'record_successful_puzzle/')                    
+                        
+                        ///send to server for storing
+                        fetch(url_to_fetch, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': getCookie('csrftoken'),
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({     
+                                'puzzle_ID': puzzle_id.toString(),
+                                 'start_year' : start_time_of_puzzle.year,
+                                 'start_month' : start_time_of_puzzle.month,
+                                 'start_day' : start_time_of_puzzle.day, 
+                                 'start_hour' : start_time_of_puzzle.hour,
+                                 'start_minute' : start_time_of_puzzle.minute,
+                                 'start_seconds' : start_time_of_puzzle.second,
+                                 'end_year' : end.year,
+                                 'end_month' : end.month,
+                                 'end_day' : end.day, 
+                                 'end_hour' : end.hour,
+                                 'end_minute' : end.minute,
+                                 'end_seconds' : end.second,
+                                 'zone_name' : start_time_of_puzzle.zoneName,
+                            }),
+                        });
+                    }
+                    else {
+                        document.getElementById("id_overlay_paragraph").innerHTML = "Well done! Your solution is correct"
+                    }
                     
                 } else {
                     document.getElementById("id_overlay_paragraph").innerHTML = "Your answer is incorrect or incomplete"
@@ -196,5 +250,6 @@ export default class Game {
 
     }//constructor
 }//Game class
+
 
 

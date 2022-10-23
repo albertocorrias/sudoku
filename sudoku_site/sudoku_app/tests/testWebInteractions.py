@@ -1,4 +1,5 @@
 import copy
+import time
 from django.test import LiveServerTestCase
 from django.urls import reverse
 from django.contrib import auth
@@ -7,8 +8,9 @@ from decimal import *
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
 
-from sudoku_app.models import Game
+from sudoku_app.models import Game, SolvedGame
 from sudoku_app.game_logic import CreateEmptyBoard, SolveBoard
 
 
@@ -55,16 +57,29 @@ def CreateExampleTestBoard():
 class TestWebInteractions(LiveServerTestCase):
 
     def test_driver_manager_chrome(self):
+        self.assertEqual(SolvedGame.objects.all().count(),0)
+
+        user_name = 'test_user'
+        password = 'Hello12349865'
+        email = 'myemail@me.com'
+        self.client.post(reverse('sudoku_app:sign_up'),{'username': user_name,'email' : email, 'password1' : password, 'password2' : password})
+        self.assertEqual(User.objects.all().count(),1)
+
         service = ChromeService(executable_path=ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service)
 
         #set up a puzzle
         hint_brd = CreateExampleTestBoard()
-        saved_hints = copy.deepcopy(hint_brd)
+        #saved_hints = copy.deepcopy(hint_brd)
         slv = SolveBoard(hint_brd)#hint_brd becomes solved. Note slv is just a flag
-        Game.objects.create(hints_board = saved_hints, solved_board = hint_brd, difficulty=Game.EASY)
+
+        #Here, we create a puzzle that is fully solved, by passing the solved board (hint_brd after the solve routine) as the hint board
+        new_game = Game.objects.create(hints_board = hint_brd, solved_board = hint_brd, difficulty=Game.EASY)
         self.assertEqual(Game.objects.all().count(), 1)
-        driver.get('http://127.0.0.1:8000/')
-        
+        driver.get('http://127.0.0.1:8000/')#+str(new_game.id))
+        #driver.find_element(By.ID, "check_answers_button").click()
+
+        time.sleep(10)
         driver.quit()
+        self.assertEqual(SolvedGame.objects.all().count(),1)
         

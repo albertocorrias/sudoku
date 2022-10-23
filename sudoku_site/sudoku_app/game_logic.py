@@ -303,6 +303,15 @@ def GetOneFullPuzzle(num_hints, deterministic_seed=None):
     ret["solved_board"] = board
     return ret
 
+def GetOneAlreadySolvedPuzzle():
+    puzzle = GetOneFullPuzzle(32,1186)
+    ret = {
+            "board_with_hints" : [],
+            "solved_board" : []
+          }
+    ret["board_with_hints"] = copy.deepcopy(puzzle["solved_board"])
+    ret["solved_board"] = copy.deepcopy(puzzle["solved_board"])
+    return ret
 
 
 
