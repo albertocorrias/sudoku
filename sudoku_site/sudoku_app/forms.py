@@ -2,7 +2,7 @@ from enum import unique
 from django import forms
 from .models import Game
 from django.forms import ValidationError
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm,PasswordResetForm
 from django.contrib.auth.models import User
 
 class GameSettingsForm(forms.Form):
@@ -23,7 +23,7 @@ class GameSettingsForm(forms.Form):
 
 class SignUpForm(UserCreationForm):
 
-    email = forms.EmailField(required=True, help_text="Requuired. Enter a valid email address")
+    email = forms.EmailField(required=True, help_text="Required. Enter a valid email address")
 
     def save(self, commit=True):
         user = super(SignUpForm, self).save(commit=False)
@@ -42,3 +42,11 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ("username", "email", "password1", "password2")
+
+class EmailValidationOnForgotPassword(PasswordResetForm):
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if not User.objects.filter(email__iexact=email, is_active=True).exists():
+            raise ValidationError("There is no user registered with the specified email address!")
+
+        return email
