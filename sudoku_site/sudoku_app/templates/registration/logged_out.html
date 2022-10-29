@@ -1,15 +1,8 @@
 <!DOCTYPE html>
-<html>
-{% load static %}
-
-  <head>
-    <meta charset="utf-8">
-    <title>lisudoku | free online sudoku</title>          
-  </head>
-  <body>
-  <div class="header">
-    lisudoku | free online sudoku
-  </div>
+<html lang="en">
+    {% include 'sudoku_app/common_headers.html' %}
+    <body>
+        {% include 'sudoku_app/app_title_div.html' %}
   <div>
     <p>Logged out!</p>
     <a href="{% url 'login'%}">Click here to login again.</a> 

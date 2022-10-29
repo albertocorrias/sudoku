@@ -13,5 +13,4 @@ urlpatterns = [
     path('sign_up/', views.sign_up,name='sign_up'),
     path('user/<int:user_id>/', views.user_page, name="user_page"),
     path('record_successful_puzzle/', views.record_successful_puzzle, name="record_successful_puzzle"),
-    path('accounts/', include('django.contrib.auth.urls')),
 ]
