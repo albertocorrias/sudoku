@@ -46,11 +46,14 @@ div.form-container li
 {
     color: grey;
     font-size: 1.5vmin;
+    text-align: center;
 }
 
 
 form.login_form{
     display:inline-block;
+    text-align: center;
 }
+
 
 
