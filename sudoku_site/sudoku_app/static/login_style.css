@@ -13,6 +13,9 @@ div.login_overall_container{
     border-style: solid;
 }
 
+p.sign-up-paragraph{
+    text-align: left;
+}
 
 p.sign-up-title{
     text-align: center;
@@ -46,7 +49,7 @@ div.form-container li
 {
     color: grey;
     font-size: 1.5vmin;
-    text-align: center;
+    text-align: left;
 }
 
 
