@@ -40,8 +40,33 @@ div.header{
     margin: auto;
     line-height: 9vh;
     padding-top: 1.5vmin;
-    
 }
+
+div.footer{
+    background-color: var(--header-background);
+    display: block;
+    width: 100%;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--header-text);
+    font-size: 1.5vmin;
+    border-top: solid;
+    border-top-color: #333333;
+    border-top-width: 0.2vmin;
+    padding-top: 1vmin;
+    padding-bottom: 1vmin;
+    margin-top: 3vmin;
+}
+
+img.footer{
+    height: 3vmin;
+    vertical-align: middle;
+}
+a.footer:visited, a.footer:active, a.footer:link {
+    text-decoration: none;
+    color: inherit;
+}
+
 a.header:visited, a.header:active, a.header:link {
     text-decoration: none;
     color: inherit;
