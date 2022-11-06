@@ -15,6 +15,13 @@ import random
 
 from sudoku_app.forms import GameSettingsForm,SignUpForm
 
+def home(request):
+    template = loader.get_template('sudoku_app/home.html')
+    context = {
+    
+    }
+    return HttpResponse(template.render(context, request))  
+
 def index(request):
     
     if (Game.objects.all().count()==0):

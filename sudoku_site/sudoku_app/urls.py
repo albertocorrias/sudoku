@@ -5,6 +5,7 @@ from . import views
 app_name = 'sudoku_app'
 
 urlpatterns = [
+    path('home/', views.home,name="home"),
     path('', views.index, name='index'),
     path('index/', views.index, name='index'),
     path('new_puzzle_from_diff_level_change', views.new_puzzle_from_diff_level_change, name='new_puzzle_from_diff_level_change'),
