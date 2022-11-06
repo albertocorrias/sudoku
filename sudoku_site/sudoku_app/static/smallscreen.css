@@ -1,4 +1,7 @@
 
+div.header{
+    font-size: 5vmin;
+}
 div.sudoku-game-wrapper{
     display: block;
     width: 100%;
@@ -6,8 +9,9 @@ div.sudoku-game-wrapper{
     align-items: center;
 }
 div.board-wrapper{
-    width: 100%;
+    width: 98%;
     display: block;
+    margin: auto;
     
 }
 div.game-board {
@@ -21,7 +25,8 @@ div.game-board {
 }
 
 div.right-controls{
-    margin: 0;
+    margin: auto;
+    width: 98%
 }
 div.numpad-wrapper {
     grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto;    

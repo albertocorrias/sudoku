@@ -41,8 +41,17 @@ def sign_up(request):
             username = sign_up_form.cleaned_data.get('username')
             raw_password = sign_up_form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            return HttpResponseRedirect(reverse('sudoku_app:index'))
+            if user is not None:
+                login(request, user)
+                return HttpResponseRedirect(reverse('sudoku_app:index'))
+            else:
+                template = loader.get_template('sudoku_app/error_page.html')
+                context = {
+                'errors': "authentication errors",
+                'target_redir_url' : str(647)
+                }
+                return HttpResponse(template.render(context, request))  
+
         else:
             game_objects = Game.objects.filter(difficulty = Game.EASY)
             sel_idx = random.randint(0,game_objects.count()-1)

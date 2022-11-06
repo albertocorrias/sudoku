@@ -33,14 +33,25 @@ div.header{
     display: block;
     width: 100%;
     text-align: center;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 4vmin;
-    color: var(--header-text);
     height: 9vh;
     margin: auto;
     line-height: 9vh;
     padding-top: 1.5vmin;
 }
+
+p.header{
+    display: inline;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 4vmin;
+    color: var(--header-text);
+}
+
+p.header_vertical_bar {
+    display: inline;
+    color: var(--buttons-background);
+    font-size: 4vmin;
+}
+
 
 div.footer{
     background-color: var(--header-background);
