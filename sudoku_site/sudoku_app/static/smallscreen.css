@@ -47,3 +47,11 @@ div.numpad-item{
 div.login_overall_container{
     width: 95%;
 }
+
+div.home_page_overall_container{
+    width: 95%;
+}
+
+div.home_main_container{
+    display: block;
+}

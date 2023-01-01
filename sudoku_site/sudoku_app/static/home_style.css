@@ -1,4 +1,39 @@
 div.home_page_overall_container{
+    display: block;
     margin: auto;
-    width: 80%;
+    width: 60%;
+    margin-top: 2vmin;
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--header-text);
+    text-align: center;
+    font-size: 3vmin;
+}
+
+div.home_main_container{
+    display: grid;
+    grid-template-columns: 40% 60%;
+    column-gap: 1vmin;
+    margin-top: 2vmin;
+}
+div.home_image_container{
+    width: 100%;
+}
+div.home_buttons_container{
+    display: block;
+}
+#play_online_id,
+#play_offline_id
+{
+    width: 90%;
+    border: none;
+    color: white;
+    padding: 1.5vmin 1.5vmin;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 3vmin;
+    margin: 1vmin 1vmin;
+    cursor: pointer;
+    background-color: var(--buttons-background);
+    border-radius: 6px;
 }

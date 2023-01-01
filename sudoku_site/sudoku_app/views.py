@@ -17,12 +17,15 @@ from sudoku_app.forms import GameSettingsForm,SignUpForm
 
 def home(request):
     template = loader.get_template('sudoku_app/home.html')
+    user_id=-1
+    if request.user.is_authenticated:
+        user_id = request.user.id
     context = {
-    
+        'user_id' : user_id
     }
     return HttpResponse(template.render(context, request))  
 
-def index(request):
+def play(request):
     
     if (Game.objects.all().count()==0):
         GenerateDatabase(1,1,0,0,11814);#If db is empty, generate one easy and one medium
@@ -50,7 +53,7 @@ def sign_up(request):
             user = authenticate(username=username, password=raw_password)
             if user is not None:
                 login(request, user)
-                return HttpResponseRedirect(reverse('sudoku_app:index'))
+                return HttpResponseRedirect(reverse('sudoku_app:play'))
             else:
                 template = loader.get_template('sudoku_app/error_page.html')
                 context = {
@@ -126,7 +129,7 @@ def new_specific_puzzle(request,puzzle_id):
     
     context = get_context(request, puzzle_id)
     if (context["error_code"] == 0):
-        template = loader.get_template('sudoku_app/index.html')
+        template = loader.get_template('sudoku_app/play.html')
         return HttpResponse(template.render(context, request))
     else:
         game_objects = Game.objects.filter(difficulty = Game.EASY)

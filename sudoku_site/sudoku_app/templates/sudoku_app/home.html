@@ -2,12 +2,24 @@
 <html lang="en">
     {% load static %}
     {% include 'sudoku_app/common_headers.html' %}
-    <link rel="stylesheet" type="text/css" href="{% static 'home_style.css' %}">
+    
     <body>
         {% include 'sudoku_app/app_title_div.html' %}
         {% include 'sudoku_app/login_bar_div.html' %}
         <div class="home_page_overall_container">   
-            Welcome to lisudoku.org! The place for free, open-source, ad-free sudoku.         
+            The place for free, open-source, ads-free sudoku.             
+            <div class = "home_main_container">
+                <div class="home_buttons_container">
+                    <form action="{% url 'sudoku_app:play' %}">
+                        <input type="submit" class="home_buttons" id="play_online_id" value="Play online" />
+                    </form>
+                    <button type="button" class="home_buttons" id="play_offline_id" style="background-color: grey;">Play offline (coming soon)</button>
+                </div>
+                <div class="home_image_container">
+                    <img src="{% static   'images/sudoku_image_web.png' %}" alt="sudoku_image" width="100%">
+                </div>
+            </div>
         </div>
+        {% include 'sudoku_app/footer.html' %}
     </body>
 </html>
