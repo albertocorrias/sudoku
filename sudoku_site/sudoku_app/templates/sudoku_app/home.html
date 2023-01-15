@@ -15,11 +15,25 @@
                     </form>
                     <button type="button" class="home_buttons" id="play_offline_id" style="background-color: grey;">Play offline (coming soon)</button>
                 </div>
-                <div class="home_image_container">
-                    <img src="{% static   'images/sudoku_image_web.png' %}" alt="sudoku_image" width="100%">
+                <div class="slide_show_container">
+                      <!-- Full-width images with number and caption text -->
+                        <div class="home_page_slides fade">
+                            <img src="{% static   'images/sudoku_image_web_1.png' %}" style="width:100%">
+                        </div>
+
+                        <div class="home_page_slides fade">
+                            <img src="{% static   'images/sudoku_image_web_2.png' %}" style="width:100%">
+                        </div>
+
+                        <div class="home_page_slides fade">
+                            <img src="{% static   'images/sudoku_image_web_3.png' %}" style="width:100%">
+                        </div>
                 </div>
+                <br>
+
             </div>
         </div>
         {% include 'sudoku_app/footer.html' %}
+        <script src="{% static   'home_slideshow.js' %}"></script>
     </body>
 </html>
