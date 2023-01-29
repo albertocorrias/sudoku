@@ -53,7 +53,7 @@ def CreateExampleTestBoard():
 class TestGameViews(TestCase):
     
     def test_index_empty_db(self):
-        response = self.client.get(reverse('sudoku_app:index'))
+        response = self.client.get(reverse('sudoku_app:play'))
         self.assertEqual(response.status_code, 302) #Should re-direct...
 
     def test_index_non_empty_db(self):
@@ -65,9 +65,9 @@ class TestGameViews(TestCase):
         self.assertEqual(Game.objects.all().count(), 1)
         self.assertEqual(Game.objects.filter(difficulty=Game.EASY).count(), 1)
 
-        response = self.client.get(reverse('sudoku_app:index'))
+        response = self.client.get(reverse('sudoku_app:play'))
         self.assertEqual(response.status_code, 302) #Should re-direct...
-        expected_url = '/' + str(Game.objects.filter(difficulty=Game.EASY).get().id)#Only one there anyway...
+        expected_url = '/play/' + str(Game.objects.filter(difficulty=Game.EASY).get().id)#Only one there anyway...
         self.assertRedirects(response, expected_url, status_code=302,target_status_code=200)
 
     def test_new_specific_puzzle(self):
@@ -116,7 +116,7 @@ class TestGameViews(TestCase):
         self.assertEqual(response.status_code, 302)#should re-direct
 
         #There are two possible urls as there are two possible puzzles
-        possible_urls = ['/'+str(one_id), '/'+str(other_id)]
+        possible_urls = ['/play/'+str(one_id), '/play/'+str(other_id)]
         all_good = False
         if response.url in possible_urls:
             all_good = True
@@ -144,7 +144,7 @@ class TestGameViews(TestCase):
         response = self.client.post(reverse('sudoku_app:new_puzzle_from_diff_level_change'), \
                                     {'difficulty_level': Game.MEDIUM, 'game_type' : GameSettingsForm.LEISURE})
         self.assertEqual(response.status_code, 302)#should re-direct
-        expected_url = '/' + str(medium_id)
+        expected_url = '/play/' + str(medium_id)
         self.assertRedirects(response, expected_url, status_code=302,target_status_code=200)
 
     def test_sign_up_form(self): 
