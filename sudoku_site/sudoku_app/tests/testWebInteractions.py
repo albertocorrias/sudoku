@@ -77,7 +77,7 @@ class TestWebInteractions(LiveServerTestCase):
         new_game = Game.objects.create(hints_board = hint_brd, solved_board = hint_brd, difficulty=Game.EASY)
         self.assertEqual(Game.objects.all().count(), 1)
         driver.get('http://127.0.0.1:8000/')#+str(new_game.id))
-        #driver.find_element(By.ID, "check_answers_button").click()
+        driver.find_element(By.ID, "check_answers_button").click()
 
         time.sleep(10)
         driver.quit()
