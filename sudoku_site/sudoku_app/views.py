@@ -10,7 +10,7 @@ from django.urls import reverse
 from django.template import loader
 from .models import Game,SolvedGame
 from .db_generation import GenerateDatabase
-from .game_logic import GetOneAlreadySolvedPuzzle
+from .game_logic import GetOneAlreadySolvedPuzzle,GetOnePuzzliWithOneEmptyColumn
 import random
 
 from sudoku_app.forms import GameSettingsForm,SignUpForm
@@ -18,6 +18,7 @@ from sudoku_app.forms import GameSettingsForm,SignUpForm
 def home(request):
     template = loader.get_template('sudoku_app/home.html')
     user_id=-1
+    
     if request.user.is_authenticated:
         user_id = request.user.id
     context = {
@@ -29,13 +30,13 @@ def play(request):
     
     if (Game.objects.all().count()==0):
         GenerateDatabase(1,1,0,0,11814);#If db is empty, generate one easy and one medium
-
-    #solved_puzzle = GetOneAlreadySolvedPuzzle()
+    
+    #for testing only
+    #solved_puzzle = GetOnePuzzliWithOneEmptyColumn()
     #hint_board = solved_puzzle["board_with_hints"]
     #sol_board = solved_puzzle["solved_board"]
-    #alreday_solved_game = Game.objects.create(hints_board = hint_board, solved_board = sol_board, difficulty=Game.EASY)
+    #alreday_solved_game = Game.objects.create(hints_board = hint_board, solved_board = sol_board, difficulty=Game.EXPERT)
     #print(alreday_solved_game.id)
-
 
     game_objects = Game.objects.filter(difficulty = Game.EASY)
     sel_idx = random.randint(0,game_objects.count()-1)

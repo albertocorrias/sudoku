@@ -1,7 +1,7 @@
 
 var Globals = {
          GRID_SIZE: 9,
-         CELL_SIZE: 8,
+         CELL_SIZE: 9,
          /*BOARD_BORDER_WIDTH: 0.9,*/
 
          NUMBER_COLOR_OF_HINTS: "rgb(46, 97, 71)", /*this is a very dark green*/

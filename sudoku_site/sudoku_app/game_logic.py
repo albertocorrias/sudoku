@@ -302,7 +302,7 @@ def GetOneFullPuzzle(num_hints, deterministic_seed=None):
         sol = SolveBoard(board)
     ret["solved_board"] = board
     return ret
-
+#helper method for testing purposes
 def GetOneAlreadySolvedPuzzle():
     puzzle = GetOneFullPuzzle(32,1186)
     ret = {
@@ -313,5 +313,28 @@ def GetOneAlreadySolvedPuzzle():
     ret["solved_board"] = copy.deepcopy(puzzle["solved_board"])
     return ret
 
+#another helper method for testing purposes
+def GetOnePuzzliWithOneEmptyColumn():
+    board = CreateEmptyBoard();
+    ret = {
+            "board_with_hints" : [],
+            "solved_board" : []
+    }
+
+    board[0][0] = 9
+    board[0][1] = 1
+    board[0][2] = 2
+    board[0][3] = 3
+    board[0][4] = 4 
+    #leave position 5 empty
+    board[0][6] = 6
+    board[0][7] = 7
+    board[0][8] = 8
+    
+    ret["solved_board"] = copy.deepcopy(board)
+    ret["board_with_hints"] = copy.deepcopy(board)
+    return ret
+
+    
 
 

@@ -13,7 +13,6 @@ div.board-wrapper{
     width: 98%;
     display: block;
     margin: auto;
-    
 }
 div.game-board {
     width:100%;
@@ -24,7 +23,10 @@ div.game-board {
     padding: 0;
     margin: 0;
 }
-
+div.cell {/*Added for small screens to prvent cells collapsing*/
+    min-width:9vmin;
+    min-height:9vmin;
+}
 div.right-controls{
     margin: auto;
     width: 98%
