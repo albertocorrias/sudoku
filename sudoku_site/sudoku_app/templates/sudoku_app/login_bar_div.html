@@ -1,8 +1,11 @@
 <div id="user_bar" class="user_bar">
     {% if user.is_authenticated %}
     You are logged in as <div id="logged_in_user" style="display:inline"><a href="{% url 'sudoku_app:user_page' user_id %}">{{ user.get_username }}</a></div>. 
-    <a href="{% url 'logout'%}?next={{request.path}}">Click here to logout</a>
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button class="check_answers_button logout_button" type="submit">Click here to logout</button>
+    </form>
     {% else %}
-    You are not signed in, <a href="{% url 'login'%}?next={{request.path}}">login</a> or <a href="{% url 'sudoku_app:sign_up' %}">sign up</a>
+    You are not signed in, <a href="{% url 'login'%}">login</a> or <a href="{% url 'sudoku_app:sign_up' %}">sign up</a>
     {% endif %}
 </div>
