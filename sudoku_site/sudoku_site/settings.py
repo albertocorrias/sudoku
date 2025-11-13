@@ -22,7 +22,7 @@ Env.read_env()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = env('DJANGO_SECRET_KEY')
-DEBUG = env('DEBUG')
+DEBUG = env.bool('DEBUG', default=False)  #cast to bool is necessary. alos, default=False if 'DEBUG' is not found
 
 ALLOWED_HOSTS = ['178.128.56.174','lisudoku.org', 'www.lisudoku.org','localhost', '127.0.0.1']
 
