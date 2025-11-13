@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_recaptcha',
 ]
 
 MIDDLEWARE = [
@@ -125,3 +126,12 @@ DEFAULT_FROM_EMAIL = 'lisudoku.org <noreply@lisudoku.org>'
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
 LOGIN_REDIRECT_URL = '/home'
 #LOGOUT_REDIRECT_URL = '/accounts/login' 
+
+#CAPTCHA SETTINGS
+if (DEBUG==False): #production
+    RECAPTCHA_PUBLIC_KEY = env('RECAPTCHA_PUBLIC_KEY')#
+    RECAPTCHA_PRIVATE_KEY = env('RECAPTCHA_PRIVATE_KEY')#
+else: #development -> use mock version, no variables declared and suppress the warning
+    SILENCED_SYSTEM_CHECKS = ['django_recaptcha.recaptcha_test_key_error']
+
+    

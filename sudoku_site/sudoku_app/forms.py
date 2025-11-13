@@ -4,6 +4,7 @@ from .models import Game
 from django.forms import ValidationError
 from django.contrib.auth.forms import UserCreationForm,PasswordResetForm
 from django.contrib.auth.models import User
+from django_recaptcha.fields import ReCaptchaField
 
 class GameSettingsForm(forms.Form):
     LEISURE = 'Leisure'
@@ -24,6 +25,7 @@ class GameSettingsForm(forms.Form):
 class SignUpForm(UserCreationForm):
 
     email = forms.EmailField(required=True, help_text="Required. Enter a valid email address")
+    captcha = ReCaptchaField()
 
     def save(self, commit=True):
         user = super(SignUpForm, self).save(commit=False)
