@@ -30,6 +30,7 @@ ALLOWED_HOSTS = ['178.128.56.174','lisudoku.org', 'www.lisudoku.org','localhost'
 
 INSTALLED_APPS = [
     'sudoku_app.apps.SudokuAppConfig',
+    'django.contrib.postgres',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
